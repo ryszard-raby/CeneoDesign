@@ -8,8 +8,9 @@ import { Text } from './components/text/text'
 import { Input } from './components/input/input'
 import { Label } from './components/label/label'
 import { UiElement } from './components/ui-element/ui-element'
+import { Price } from './components/price/price'
 
-const sections = ['Button', 'Input', 'Label', 'Card', 'Layout', 'Container', 'Text', 'Icon', 'UI element']
+const sections = ['Button', 'Input', 'Label', 'Price', 'Card', 'Layout', 'Container', 'Text', 'Icon', 'UI element']
 const variants = ['primary', 'accent', 'outline', 'selected', 'dashed', 'blank', 'gray'] as const
 const textSizes = ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl'] as const
 
@@ -44,7 +45,7 @@ export function App() {
         <aside class="preview__sidebar">
           <p class="eyebrow">Biblioteka</p>
           <nav aria-label="Komponenty">{sections.map((name, i) => <a href={`#${name.toLowerCase().replace(/\s+/g, '-')}`} key={name}><span>0{i + 1}</span>{name}</a>)}</nav>
-          <p class="preview__note">9 komponentów<br />43 ikony SVG<br />1 UI element</p>
+          <p class="preview__note">10 komponentów<br />43 ikony SVG<br />1 UI element</p>
         </aside>
         <main class="preview__main">
           <div class="preview__intro"><p class="eyebrow">Ceneo Design System</p><h1>Gotowe do użycia.</h1><p>Komponenty, warianty i ikony. Sprawdź, jak wyglądają w jasnym i ciemnym motywie.</p></div>
@@ -68,6 +69,13 @@ export function App() {
               <div class="label-sample"><code>plain</code><Label variant="plain">Label</Label></div>
               <div class="label-sample"><code>filled + icon</code><Label iconStart={<Icon name="check" size={16} />}>Label</Label></div>
               <div class="label-sample"><code>plain + icon</code><Label variant="plain" iconStart={<Icon name="check" size={16} />}>Label</Label></div>
+            </div>
+          </section>
+          <section id="price" class="preview-section">
+            <header><h2>Price</h2><span>Prefiks opcjonalny</span></header>
+            <div class="price-grid">
+              <div class="price-sample"><code>z prefiksem</code><Price amount={2400} /></div>
+              <div class="price-sample"><code>bez prefiksu</code><Price amount={1299} decimal="99" showPrefix={false} /></div>
             </div>
           </section>
           <section id="card" class="preview-section">
