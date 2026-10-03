@@ -8,7 +8,7 @@ import { z } from 'zod'
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const sourceRoot = resolve(projectRoot, 'src')
 const componentRoot = resolve(sourceRoot, 'components')
-const tokenFile = resolve(sourceRoot, 'style', 'figma-variables.css')
+const tokenFile = resolve(sourceRoot, 'theme', 'figma-variables.css')
 const sourceExtensions = new Set(['.css', '.js', '.jsx', '.scss', '.ts', '.tsx'])
 const styleExtensions = new Set(['.css', '.scss'])
 const manifestExtensions = new Set(['.json'])
@@ -109,7 +109,7 @@ async function readDesignTokens(): Promise<DesignTokens> {
 
 function tokenResponse(tokens: DesignTokens) {
   return {
-    source: 'src/style/figma-variables.css',
+    source: 'src/theme/figma-variables.css',
     values: tokens,
     notes: [
       'Values are resolved from the source token file; do not infer colors from token names.',
