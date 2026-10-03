@@ -29,7 +29,7 @@ export function App() {
   return (
     <div class="preview">
       <header class="preview__header">
-        <a href="#" class="preview__brand"><span>ceneo</span> Design</a>
+        <a href="#" class="preview__brand"><img src="./src/ui elements/logo.svg" alt="Ceneo Logo" /> Design</a>
         <div class="theme-switch" role="group" aria-label="Motyw podglądu">
           <button type="button" aria-pressed={theme === 'light'} onClick={() => setTheme('light')}>Jasny</button>
           <button type="button" aria-pressed={theme === 'dark'} onClick={() => setTheme('dark')}>Ciemny</button>

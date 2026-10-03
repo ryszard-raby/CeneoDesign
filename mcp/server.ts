@@ -10,7 +10,6 @@ const sourceRoot = resolve(projectRoot, 'src')
 const componentRoot = resolve(sourceRoot, 'components')
 const tokenFiles = [
   resolve(sourceRoot, 'theme', 'figma-variables.css'),
-  resolve(sourceRoot, 'style', 'figma-variables.css'),
 ]
 const sourceExtensions = new Set(['.css', '.js', '.jsx', '.scss', '.ts', '.tsx'])
 const styleExtensions = new Set(['.css', '.scss'])
@@ -193,12 +192,19 @@ function resolveVisualStyles(visual: unknown, tokens: TokenValues): unknown {
 }
 
 function resolvedStyles(spec: Record<string, unknown>, tokens: DesignTokens) {
+  const themes = {
+    default: tokens.default,
+    mobile: tokens.mobile,
+    dark: tokens.dark,
+    mobileDark: tokens.mobileDark,
+  }
+
   return {
     instruction:
       'Use these resolved values directly. Do not ask the user to provide colors or infer them from token names.',
     source: 'src/theme/figma-variables.css',
     themes: Object.fromEntries(
-      Object.entries(tokens).map(([theme, values]) => [
+      Object.entries(themes).map(([theme, values]) => [
         theme,
         resolveVisualStyles(spec.visual, values),
       ]),
