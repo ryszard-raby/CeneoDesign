@@ -1,3 +1,5 @@
+import { Button } from './components/button/button'
+
 const components = [
   { name: 'Button', status: 'Gotowy' },
   { name: 'Input', status: 'Gotowy' },
@@ -60,6 +62,19 @@ export function App() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+      <section class="button-showcase" aria-labelledby="button-heading">
+        <p class="eyebrow">Komponent 01</p>
+        <h2 id="button-heading">Button</h2>
+        <div class="button-showcase__grid">
+          {(['primary', 'accent', 'outline', 'selected', 'dashed', 'blank', 'gray'] as const).map((variant) => (
+            <div class="button-showcase__item" key={variant}>
+              <span>{variant}</span>
+              <Button variant={variant}>Button</Button>
+              <Button variant={variant} size="small">Button</Button>
+            </div>
+          ))}
         </div>
       </section>
     </main>

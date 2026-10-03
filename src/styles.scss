@@ -201,3 +201,16 @@ main {
     padding: 22px;
   }
 }
+
+.button-showcase {
+  margin-top: 20px;
+  padding: 28px;
+  border: 1px solid $line;
+  border-radius: 8px;
+  background: $paper;
+
+  h2 { margin: 5px 0 24px; font: 700 28px/1.2 Georgia, serif; }
+  &__grid { display: flex; flex-wrap: wrap; gap: 32px; }
+  &__item { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+  &__item > span { color: $muted; font-size: 13px; text-transform: capitalize; }
+}

@@ -1,0 +1,33 @@
+/* Button tokens from the CeneoDesign Figma collections. */
+:root {
+  --cd-spacing-component-gap-horizontal: 12;
+  --cd-spacing-button-height: 40;
+  --cd-spacing-button-small-height: 30;
+  --cd-spacing-button-padding-inline: 18;
+  --cd-spacing-button-radius: 8;
+  --cd-font-weight-bold: 600;
+  --cd-text-base: 16;
+  --cd-text-sm: 14;
+  --cd-color-fixed-primary: #ff6400;
+  --cd-color-fixed-accent: #0078d4;
+  --cd-color-fixed-white: #ffffff;
+  --cd-text-text: #000000;
+  --cd-background-backgorund: #ffffff;
+  --cd-background-background-2: #f2f5f7;
+  --cd-border-border: #000000;
+  --cd-border-border-2: #9aa7b1;
+}
+
+:root[data-cd-theme="mobile"] {
+  --cd-spacing-component-gap-horizontal: 6;
+  --cd-spacing-button-padding-inline: 8;
+}
+
+:root[data-cd-color-mode="dark"] {
+  --cd-color-fixed-accent: #0898ff;
+  --cd-text-text: #ffffff;
+  --cd-background-backgorund: #16202a;
+  --cd-background-background-2: #333a42;
+  --cd-border-border: #ffffff;
+  --cd-border-border-2: #80909d;
+}
