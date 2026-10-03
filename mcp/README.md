@@ -5,11 +5,17 @@ Local MCP server exposing technology-neutral component contracts to coding agent
 ## Tools
 
 - `list_components` lists reusable components with available specifications.
-- `get_component_spec` returns behavior, API, accessibility and visual rules. It
-	instructs the agent to use the target app's existing stack without installing
-	dependencies.
-- `get_design_tokens` returns the exact values from `src/style/figma-variables.css`
-	for default, mobile, dark and mobile-dark themes.
+- The current component catalog includes `Button`, `Card`, `Container`, `Icon`
+	and `Layout`. Each definition is stored next to its source as
+	`src/components/<name>/component.json` and is discovered automatically.
+- `get_component_spec` requires the client framework and styling stack, then
+	returns behavior, API, accessibility and visual rules, including direct
+	`resolvedStyles` values for every theme. Its response requires the agent to
+	create and expose a reusable native component in that stack, without
+	installing dependencies or returning a plain HTML snippet.
+- `get_design_tokens` returns the complete `src/theme/figma-variables.css` file
+	plus parsed values for default, mobile, dark and mobile-dark themes. Copy the
+	complete CSS file to the client to preserve all token and theme selectors.
 - `read_component` reads reference source from `src` when implementation detail is needed.
 - `read_styles` reads a CSS or SCSS file from `src`.
 
@@ -17,11 +23,13 @@ All paths are restricted to the `src` directory.
 
 Example prompt in another application:
 
-> Use `ceneo-components.get_component_spec` for `Button`. Implement it using
-> this application's existing framework, styling conventions and primitives.
-> Preserve its variants, icon slots and accessibility behavior. Do not add
-> dependencies. Use the resolved design token values from the response; do not
-> guess colors from token names.
+> Use `ceneo-components.get_component_spec` for `Button` with
+> `targetStack: "ASP.NET Core Razor/CSHTML with scoped CSS"`. Implement and
+> expose it as a reusable native component in that stack, using this
+> application's existing conventions and primitives. Preserve its variants,
+> icon slots and accessibility behavior. Do not add dependencies or return a
+> plain HTML snippet. Use the resolved design token values from the response;
+> do not guess colors from token names.
 
 VS Code discovers the server in this workspace through `.vscode/mcp.json`. To
 use it from other workspaces, register it in the VS Code user profile with an

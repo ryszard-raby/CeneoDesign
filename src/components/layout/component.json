@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "name": "Layout",
+  "description": "Page-level vertical layout with design-system spacing, responsive horizontal padding and themed background.",
+  "semantics": {
+    "element": "div",
+    "nativeAttributes": "Forward the target stack's native div attributes and events.",
+    "content": "Render children as the page or section content."
+  },
+  "props": [
+    {
+      "name": "children",
+      "type": "renderable content",
+      "required": false,
+      "description": "Content rendered inside the layout."
+    }
+  ],
+  "layout": {
+    "display": "flex",
+    "direction": "column",
+    "alignment": "stretch",
+    "gapToken": "--cd-spacing-layout-gap",
+    "width": "100%",
+    "minWidth": "280px",
+    "boxSizing": "border-box",
+    "backgroundToken": "--cd-background-backgorund",
+    "responsive": {
+      "minViewport": "721px",
+      "paddingInlineToken": "--cd-spacing-layout-padding-horizontal"
+    }
+  },
+  "accessibility": [
+    "Keep the default div semantics unless the target application requires a specific page or section landmark.",
+    "Preserve the accessible semantics of all child content.",
+    "Forward native attributes and custom classes according to the target framework."
+  ],
+  "adaptationRules": [
+    "Implement Layout as a reusable component in the target application's framework.",
+    "Preserve the 280px minimum width and responsive padding behavior where the client layout permits it.",
+    "Use the target framework's native children or slot/content convention.",
+    "Use the complete design token CSS artifact when the client has no equivalent token system.",
+    "Do not install Preact, Sass or any other dependency solely for this component."
+  ]
+}
