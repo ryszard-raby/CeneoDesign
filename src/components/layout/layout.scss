@@ -1,0 +1,16 @@
+.cd-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: calc(var(--cd-spacing-layout-gap) * 1px);
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 280px;
+  background: var(--cd-background-backgorund);
+}
+
+@media (min-width: 721px) {
+  .cd-layout {
+    padding-inline: calc(var(--cd-spacing-layout-padding-horizontal) * 1px);
+  }
+}
