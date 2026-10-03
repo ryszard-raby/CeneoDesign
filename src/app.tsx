@@ -47,7 +47,7 @@ export function App() {
           </ul>
           <div class="component-preview" aria-label="Przykłady przycisku">
             <Button>Dodaj do koszyka</Button>
-            <Button variant="secondary">Obserwuj cenę</Button>
+            <Button variant="outline">Obserwuj cenę</Button>
           </div>
         </div>
 

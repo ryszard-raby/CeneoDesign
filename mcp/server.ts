@@ -1,5 +1,5 @@
 import { readdir, readFile } from 'node:fs/promises'
-import { dirname, extname, isAbsolute, relative, resolve, sep } from 'node:path'
+import { basename, dirname, extname, isAbsolute, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
@@ -8,9 +8,16 @@ import { z } from 'zod'
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const sourceRoot = resolve(projectRoot, 'src')
 const componentRoot = resolve(sourceRoot, 'components')
-const componentExtensions = new Set(['.jsx', '.tsx'])
 const sourceExtensions = new Set(['.css', '.js', '.jsx', '.scss', '.ts', '.tsx'])
 const styleExtensions = new Set(['.css', '.scss'])
+const manifestExtensions = new Set(['.json'])
+const componentSpecSchema = z
+  .object({
+    schemaVersion: z.number(),
+    name: z.string(),
+    description: z.string(),
+  })
+  .passthrough()
 
 async function findFiles(directory: string, extensions: Set<string>): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true })
@@ -50,12 +57,17 @@ function resolveSourceFile(requestedPath: string, extensions: Set<string>): stri
   return filePath
 }
 
-function findExportedComponents(source: string): string[] {
-  const declarations = source.matchAll(
-    /export\s+(?:default\s+)?(?:async\s+)?(?:function|class|const|let|var)\s+([A-Z][A-Za-z0-9_]*)/g,
-  )
+async function findComponentSpecs() {
+  const files = await findFiles(componentRoot, manifestExtensions)
 
-  return Array.from(declarations, (match) => match[1])
+  return Promise.all(
+    files
+      .filter((filePath) => basename(filePath) === 'component.json')
+      .map(async (filePath) => ({
+        path: fromSourceRoot(filePath),
+        spec: componentSpecSchema.parse(JSON.parse(await readFile(filePath, 'utf8'))),
+      })),
+  )
 }
 
 const server = new McpServer({
@@ -67,17 +79,16 @@ server.registerTool(
   'list_components',
   {
     description:
-      'List reusable JSX and TSX components, including their exported component names.',
+      'List reusable components that have technology-neutral implementation specifications.',
     inputSchema: {},
   },
   async () => {
-    const files = await findFiles(componentRoot, componentExtensions)
-    const components = await Promise.all(
-      files.map(async (filePath) => ({
-        path: fromSourceRoot(filePath),
-        exports: findExportedComponents(await readFile(filePath, 'utf8')),
-      })),
-    )
+    const specs = await findComponentSpecs()
+    const components = specs.map(({ path, spec }) => ({
+      name: spec.name,
+      description: spec.description,
+      specPath: path,
+    }))
 
     return {
       content: [{ type: 'text', text: JSON.stringify(components, null, 2) }],
@@ -86,52 +97,43 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_component_bundle',
+  'get_component_spec',
   {
     description:
-      'Get all source and style files needed to copy a named Ceneo Design component into another app.',
+      'Get a technology-neutral component contract to implement with the target app existing stack and no new dependencies.',
     inputSchema: {
-      name: z.string().regex(/^[A-Z][A-Za-z0-9_]*$/).describe('Exported component name'),
+      name: z.string().regex(/^[A-Z][A-Za-z0-9_]*$/).describe('Component name'),
+      targetStack: z
+        .string()
+        .optional()
+        .describe('Optional target stack summary, for example React with CSS Modules'),
     },
   },
-  async ({ name }) => {
-    const componentFiles = await findFiles(componentRoot, componentExtensions)
-    const matchingFile = await componentFiles.reduce<Promise<string | undefined>>(
-      async (result, filePath) => {
-        const match = await result
+  async ({ name, targetStack }) => {
+    const specs = await findComponentSpecs()
+    const match = specs.find(({ spec }) => spec.name === name)
 
-        if (match) {
-          return match
-        }
-
-        const source = await readFile(filePath, 'utf8')
-        return findExportedComponents(source).includes(name) ? filePath : undefined
-      },
-      Promise.resolve(undefined),
-    )
-
-    if (!matchingFile) {
+    if (!match) {
       throw new Error(`Component not found: ${name}.`)
     }
 
-    const files = await findFiles(dirname(matchingFile), sourceExtensions)
-    const bundle = {
-      name,
-      framework: 'preact',
-      dependencies: {
-        preact: '^10.0.0',
-        sass: '^1.0.0',
+    const response = {
+      component: match.spec,
+      implementationInstructions: {
+        targetStack: targetStack ?? 'Detect from the target application.',
+        dependencyPolicy: 'Do not add dependencies for this component.',
+        approach: [
+          'Inspect the target application conventions before writing code.',
+          'Implement the contract with its existing framework, language and styling system.',
+          'Reuse existing primitives and tokens where possible.',
+          'Adapt prop names to local conventions while preserving behavior and accessibility.',
+          'Validate with the target application build and relevant tests.',
+        ],
       },
-      files: await Promise.all(
-        files.map(async (filePath) => ({
-          path: fromSourceRoot(filePath),
-          content: await readFile(filePath, 'utf8'),
-        })),
-      ),
     }
 
     return {
-      content: [{ type: 'text', text: JSON.stringify(bundle, null, 2) }],
+      content: [{ type: 'text', text: JSON.stringify(response, null, 2) }],
     }
   },
 )
@@ -140,9 +142,9 @@ server.registerTool(
   'read_component',
   {
     description:
-      'Read a component or supporting source file. The path is relative to the src directory.',
+      'Read framework-specific reference source only when implementation detail is needed. Prefer get_component_spec for use in another app.',
     inputSchema: {
-      path: z.string().describe('Source-relative path, for example components/Button.tsx'),
+      path: z.string().describe('Source-relative path, for example components/Button/button.tsx'),
     },
   },
   async ({ path }) => {
