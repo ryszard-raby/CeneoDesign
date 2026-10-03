@@ -1,0 +1,3 @@
+[mcp_servers.ceneo-components]
+command = "C:\\Program Files\\nodejs\\node.exe"
+args = ["--experimental-strip-types", "C:\\_git\\CeneoDesign\\mcp\\server.ts"]

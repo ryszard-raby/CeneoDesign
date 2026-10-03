@@ -9,10 +9,10 @@ Zwraca ono ten dokument oraz pełną zawartość `src/theme/figma-variables.css`
 
 Wymagana kolejność pracy:
 
-1. Wywołaj `get_started` i zastosuj otrzymane zmienne CSS.
+1. Wywołaj `get_started` i zastosuj otrzymany kompletny plik zmiennych CSS.
 2. Wywołaj `list_components`, aby znaleźć dostępny komponent.
 3. Wywołaj `get_component_spec` z nazwą komponentu i stosem aplikacji docelowej.
-4. Używaj `read_component` lub `read_styles` tylko wtedy, gdy potrzebujesz szczegółów implementacji referencyjnej.
+4. Używaj `read_component` lub `read_styles` tylko wtedy, gdy potrzebujesz szczegółów implementacji referencyjnej. `read_styles` nie zwraca ponownie zmiennych motywu.
 
 ## Zasady implementacji
 
@@ -31,3 +31,10 @@ npm run mcp
 npm run mcp:inspect
 npm run mcp:test
 ```
+
+## Codex
+
+Konfiguracja `.codex/config.toml` rejestruje lokalny serwer MCP pod nazwą
+`ceneo-components`. Codex wczytuje konfigurację przy otwarciu nowej sesji.
+Agent powinien rozpocząć pracę od `ceneo-components.get_started`.
+

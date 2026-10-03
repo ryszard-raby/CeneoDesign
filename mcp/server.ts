@@ -147,14 +147,7 @@ function tokenResponse(document: DesignTokenDocument) {
       content: document.source,
       instruction: 'Copy this complete CSS file to the client so all design tokens and theme selectors are preserved.',
     },
-    values: {
-      default: document.default,
-      mobile: document.mobile,
-      dark: document.dark,
-      mobileDark: document.mobileDark,
-    },
     notes: [
-      'Values are resolved from the source token file; do not infer colors from token names.',
       'The token --cd-background-backgorund contains the spelling used by the source design system.',
       'Use default for the standard light theme, dark for data-cd-color-mode="dark", and mobile for data-cd-theme="mobile".',
     ],
@@ -215,7 +208,7 @@ function resolvedStyles(spec: Record<string, unknown>, tokens: DesignTokens) {
 
 const server = new McpServer({
   name: 'ceneo-design-components',
-  version: '1.6.0',
+  version: '1.7.0',
 })
 
 server.registerTool(
@@ -278,7 +271,7 @@ server.registerTool(
   'get_component_spec',
   {
     description:
-      'Call get_started first. Then get a component contract that MUST be implemented as a reusable native component of the required client framework or application stack, using the required cd- CSS class prefix, with exact resolved styles, colors, and the complete design token CSS file. The client stack is required. Do not return a plain HTML snippet, standalone script, or source from another framework.',
+      'Call get_started first. Then get a component contract that MUST be implemented as a reusable native component of the required client framework or application stack, using the required cd- CSS class prefix and exact resolved component styles. The client stack is required. Do not return a plain HTML snippet, standalone script, or source from another framework.',
     inputSchema: {
       name: z.string().regex(/^[A-Z][A-Za-z0-9_]*$/).describe('Component name'),
       targetStack: z
@@ -299,7 +292,10 @@ server.registerTool(
     const response = {
       component: match.spec,
       resolvedStyles: resolvedStyles(match.spec, tokenDocument),
-      designTokens: tokenResponse(tokenDocument),
+      tokenDependency: {
+        source: tokenDocument.filePath,
+        instruction: 'The complete token CSS was returned by get_started. Reuse that file; do not request or duplicate it here.',
+      },
       implementationInstructions: {
         targetStack,
         frameworkComponent: {
@@ -348,22 +344,6 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_design_tokens',
-  {
-    description:
-      'Call get_started first. Get the complete Ceneo figma-variables.css file plus parsed values for light, dark and mobile themes. Copy the full CSS file to the client.',
-    inputSchema: {},
-  },
-  async () => {
-    const tokenDocument = await readDesignTokenDocument()
-
-    return {
-      content: [{ type: 'text', text: JSON.stringify(tokenResponse(tokenDocument), null, 2) }],
-    }
-  },
-)
-
-server.registerTool(
   'read_component',
   {
     description:
@@ -386,13 +366,18 @@ server.registerTool(
   'read_styles',
   {
     description:
-      'Call get_started first. Read a CSS or SCSS file with the design tokens and styles used by the components.',
+      'Call get_started first. Read component or preview CSS/SCSS implementation details. Theme variables are provided only by get_started.',
     inputSchema: {
       path: z.string().default('styles.scss').describe('Style path relative to src'),
     },
   },
   async ({ path }) => {
     const filePath = resolveSourceFile(path, styleExtensions)
+
+    if (filePath === tokenFiles[0]) {
+      throw new Error('Theme variables are returned by get_started and cannot be duplicated through read_styles.')
+    }
+
     const source = await readFile(filePath, 'utf8')
 
     return {
