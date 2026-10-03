@@ -8,7 +8,9 @@ import { z } from 'zod'
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const sourceRoot = resolve(projectRoot, 'src')
 const componentRoot = resolve(sourceRoot, 'components')
-const tokenFile = resolve(sourceRoot, 'theme', 'figma-variables.css')
+const tokenFiles = [
+  resolve(sourceRoot, 'theme', 'figma-variables.css'),
+]
 const sourceExtensions = new Set(['.css', '.js', '.jsx', '.scss', '.ts', '.tsx'])
 const styleExtensions = new Set(['.css', '.scss'])
 const manifestExtensions = new Set(['.json'])
@@ -80,6 +82,11 @@ interface DesignTokens {
   mobileDark: TokenValues
 }
 
+interface DesignTokenDocument extends DesignTokens {
+  filePath: string
+  source: string
+}
+
 function parseTokenDeclarations(block: string): TokenValues {
   return Object.fromEntries(
     Array.from(block.matchAll(/(--cd-[\w-]+)\s*:\s*([^;]+);/g), (match) => [
@@ -89,8 +96,26 @@ function parseTokenDeclarations(block: string): TokenValues {
   )
 }
 
-async function readDesignTokens(): Promise<DesignTokens> {
-  const source = await readFile(tokenFile, 'utf8')
+async function readDesignTokenDocument(): Promise<DesignTokenDocument> {
+  let source: string | undefined
+  let filePath: string | undefined
+
+  for (const candidate of tokenFiles) {
+    try {
+      source = await readFile(candidate, 'utf8')
+      filePath = candidate
+      break
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+        throw error
+      }
+    }
+  }
+
+  if (!source || !filePath) {
+    throw new Error(`Design token file not found. Checked: ${tokenFiles.join(', ')}`)
+  }
+
   const blocks = Array.from(source.matchAll(/([^{}]+)\{([^{}]*)\}/g), (match) => ({
     selector: match[1].replace(/\/\*[\s\S]*?\*\//g, '').trim(),
     values: parseTokenDeclarations(match[2]),
@@ -100,6 +125,8 @@ async function readDesignTokens(): Promise<DesignTokens> {
   const dark = blocks.find(({ selector }) => selector.includes('data-cd-color-mode="dark"'))?.values ?? {}
 
   return {
+    filePath: fromSourceRoot(filePath),
+    source,
     default: base,
     mobile: { ...base, ...mobile },
     dark: { ...base, ...dark },
@@ -107,10 +134,20 @@ async function readDesignTokens(): Promise<DesignTokens> {
   }
 }
 
-function tokenResponse(tokens: DesignTokens) {
+function tokenResponse(document: DesignTokenDocument) {
   return {
-    source: 'src/theme/figma-variables.css',
-    values: tokens,
+    source: document.filePath,
+    cssFile: {
+      path: document.filePath,
+      content: document.source,
+      instruction: 'Copy this complete CSS file to the client so all design tokens and theme selectors are preserved.',
+    },
+    values: {
+      default: document.default,
+      mobile: document.mobile,
+      dark: document.dark,
+      mobileDark: document.mobileDark,
+    },
     notes: [
       'Values are resolved from the source token file; do not infer colors from token names.',
       'The token --cd-background-backgorund contains the spelling used by the source design system.',
@@ -119,9 +156,61 @@ function tokenResponse(tokens: DesignTokens) {
   }
 }
 
+function resolveTokenValue(value: unknown, tokens: TokenValues): unknown {
+  if (typeof value !== 'string') {
+    return value
+  }
+
+  if (tokens[value]) {
+    return tokens[value]
+  }
+
+  return value.replace(/var\((--cd-[\w-]+)\)/g, (reference, tokenName: string) => {
+    return tokens[tokenName] ?? reference
+  })
+}
+
+function resolveVisualStyles(visual: unknown, tokens: TokenValues): unknown {
+  if (Array.isArray(visual)) {
+    return visual.map((value) => resolveVisualStyles(value, tokens))
+  }
+
+  if (visual && typeof visual === 'object') {
+    return Object.fromEntries(
+      Object.entries(visual).map(([key, value]) => {
+        const resolvedKey = key.endsWith('Token') ? key.slice(0, -5) : key
+        return [resolvedKey, resolveVisualStyles(value, tokens)]
+      }),
+    )
+  }
+
+  return resolveTokenValue(visual, tokens)
+}
+
+function resolvedStyles(spec: Record<string, unknown>, tokens: DesignTokens) {
+  const themes = {
+    default: tokens.default,
+    mobile: tokens.mobile,
+    dark: tokens.dark,
+    mobileDark: tokens.mobileDark,
+  }
+
+  return {
+    instruction:
+      'Use these resolved values directly. Do not ask the user to provide colors or infer them from token names.',
+    source: 'src/theme/figma-variables.css',
+    themes: Object.fromEntries(
+      Object.entries(themes).map(([theme, values]) => [
+        theme,
+        resolveVisualStyles(spec.visual, values),
+      ]),
+    ),
+  }
+}
+
 const server = new McpServer({
   name: 'ceneo-design-components',
-  version: '1.0.0',
+  version: '1.4.0',
 })
 
 server.registerTool(
@@ -149,13 +238,13 @@ server.registerTool(
   'get_component_spec',
   {
     description:
-      'Get a technology-neutral component contract to implement with the target app existing stack and no new dependencies.',
+      'Get a component contract that MUST be implemented as a reusable native component of the required client framework or application stack, with exact resolved styles, colors, and the complete design token CSS file. The client stack is required. Do not return a plain HTML snippet, standalone script, or source from another framework.',
     inputSchema: {
       name: z.string().regex(/^[A-Z][A-Za-z0-9_]*$/).describe('Component name'),
       targetStack: z
         .string()
-        .optional()
-        .describe('Optional target stack summary, for example React with CSS Modules'),
+        .min(1)
+        .describe('Required client framework and styling stack, for example React with CSS Modules or ASP.NET Core Razor with scoped CSS'),
     },
   },
   async ({ name, targetStack }) => {
@@ -166,17 +255,35 @@ server.registerTool(
       throw new Error(`Component not found: ${name}.`)
     }
 
+    const tokenDocument = await readDesignTokenDocument()
     const response = {
       component: match.spec,
-      designTokens: tokenResponse(await readDesignTokens()),
+      resolvedStyles: resolvedStyles(match.spec, tokenDocument),
+      designTokens: tokenResponse(tokenDocument),
       implementationInstructions: {
-        targetStack: targetStack ?? 'Detect from the target application.',
+        targetStack,
+        frameworkComponent: {
+          required: true,
+          deliverable: `Create a reusable component implemented natively in ${targetStack}.`,
+          preserve: [
+            'Use the client framework component model, lifecycle and prop/input conventions.',
+            'Use the client framework rendering and event-binding APIs.',
+            'Integrate with the client application styling system.',
+            'Export or register the component according to the client application conventions.',
+          ],
+          forbidden: [
+            'Do not return a plain HTML snippet as the component implementation.',
+            'Do not create a standalone JavaScript widget outside the client framework.',
+            'Do not copy the Preact implementation when the client uses another framework.',
+            'Do not install another framework or dependencies solely to host this component.',
+          ],
+        },
         dependencyPolicy: 'Do not add dependencies for this component.',
         approach: [
           'Inspect the target application conventions before writing code.',
-          'Implement the contract with its existing framework, language and styling system.',
+          'Implement and expose the component using the required client framework, language and styling system.',
           'Reuse existing primitives and tokens where possible.',
-          'Use the resolved design token values from this response; do not guess colors from token names.',
+          'Use resolvedStyles from this response directly; do not ask the user for colors or guess them from token names.',
           'Adapt prop names to local conventions while preserving behavior and accessibility.',
           'Validate with the target application build and relevant tests.',
         ],
@@ -193,12 +300,16 @@ server.registerTool(
   'get_design_tokens',
   {
     description:
-      'Get exact Ceneo design token values, including color values and light, dark and mobile theme overrides.',
+      'Get the complete Ceneo figma-variables.css file plus parsed values for light, dark and mobile themes. Copy the full CSS file to the client.',
     inputSchema: {},
   },
-  async () => ({
-    content: [{ type: 'text', text: JSON.stringify(tokenResponse(await readDesignTokens()), null, 2) }],
-  }),
+  async () => {
+    const tokenDocument = await readDesignTokenDocument()
+
+    return {
+      content: [{ type: 'text', text: JSON.stringify(tokenResponse(tokenDocument), null, 2) }],
+    }
+  },
 )
 
 server.registerTool(
