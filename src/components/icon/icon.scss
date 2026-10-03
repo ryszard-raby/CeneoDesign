@@ -4,3 +4,12 @@
   object-fit: contain;
   vertical-align: middle;
 }
+
+:root[data-cd-color-mode='dark'] .cd-icon:not(.cd-icon--multicolor) {
+  filter: invert(1);
+}
+
+:root[data-cd-color-mode='dark'] .cd-icon--multicolor {
+  background: var(--cd-color-fixed-white);
+  border-radius: 3px;
+}

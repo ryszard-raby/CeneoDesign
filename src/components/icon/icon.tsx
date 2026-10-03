@@ -34,7 +34,7 @@ export interface IconProps {
 export function Icon({ name, size = 24, label, class: className }: IconProps) {
   return (
     <img
-      class={['cd-icon', className].filter(Boolean).join(' ')}
+      class={['cd-icon', name === 'cart-fill' && 'cd-icon--multicolor', className].filter(Boolean).join(' ')}
       src={iconUrls[name]}
       width={size}
       height={size}
