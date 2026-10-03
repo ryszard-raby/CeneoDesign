@@ -2,6 +2,10 @@
   "schemaVersion": 1,
   "name": "Container",
   "description": "Full-width flex container that lays out content horizontally with wrapping or vertically.",
+  "naming": {
+    "cssClassPrefix": "cd-",
+    "baseClass": "cd-container"
+  },
   "semantics": {
     "element": "div",
     "nativeAttributes": "Forward the target stack's native div attributes and events.",

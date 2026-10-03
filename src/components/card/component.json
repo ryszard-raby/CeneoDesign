@@ -2,6 +2,10 @@
   "schemaVersion": 1,
   "name": "Card",
   "description": "Flexible content surface with white, gray, outlined and bottom-border styles.",
+  "naming": {
+    "cssClassPrefix": "cd-",
+    "baseClass": "cd-card"
+  },
   "semantics": {
     "element": "div",
     "nativeAttributes": "Forward the target stack's native div attributes and events.",

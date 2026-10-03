@@ -2,6 +2,10 @@
   "schemaVersion": 1,
   "name": "Layout",
   "description": "Page-level vertical layout with design-system spacing, responsive horizontal padding and themed background.",
+  "naming": {
+    "cssClassPrefix": "cd-",
+    "baseClass": "cd-layout"
+  },
   "semantics": {
     "element": "div",
     "nativeAttributes": "Forward the target stack's native div attributes and events.",

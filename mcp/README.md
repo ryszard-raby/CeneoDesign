@@ -7,7 +7,8 @@ Local MCP server exposing technology-neutral component contracts to coding agent
 - `list_components` lists reusable components with available specifications.
 - `get_component_spec` returns behavior, API, accessibility and visual rules. It
 	instructs the agent to use the target app's existing stack without installing
-	dependencies.
+	dependencies. Every generated
+	component must use the `cd-` CSS class prefix and the manifest's base class.
 - `get_design_tokens` returns the complete CSS file and exact values from
 	`src/theme/figma-variables.css`
 	for default, mobile, dark and mobile-dark themes.
@@ -23,8 +24,9 @@ Example prompt in another application:
 > expose it as a reusable native component in that stack, using this
 > application's existing conventions and primitives. Preserve its variants,
 > icon slots and accessibility behavior. Do not add dependencies or return a
-> plain HTML snippet. Use the resolved design token values from the response;
-> do not guess colors from token names.
+> plain HTML snippet. Use the `cd-button` root class and prefix all
+> component-owned classes with `cd-`. Use the resolved design token values
+> from the response; do not guess colors from token names.
 
 Register the server in the MCP client with `npm` as the command and
 `--prefix`, the absolute project path, `run`, `mcp` as arguments. The server
