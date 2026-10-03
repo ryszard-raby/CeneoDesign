@@ -1,3 +1,5 @@
+import { Button } from './components/Button/index.ts'
+
 const components = [
   { name: 'Button', status: 'Gotowy' },
   { name: 'Input', status: 'Gotowy' },
@@ -43,6 +45,10 @@ export function App() {
               </li>
             ))}
           </ul>
+          <div class="component-preview" aria-label="Przykłady przycisku">
+            <Button>Dodaj do koszyka</Button>
+            <Button variant="secondary">Obserwuj cenę</Button>
+          </div>
         </div>
 
         <div class="panel panel--tokens">

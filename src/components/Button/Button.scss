@@ -1,0 +1,87 @@
+.ceneo-button {
+  --button-accent: #ff5a00;
+  --button-ink: #1a1a1a;
+  --button-paper: #ffffff;
+
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font: 700 14px/1 'Trebuchet MS', 'Segoe UI', sans-serif;
+  letter-spacing: 0;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+
+  &:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--button-accent), transparent 68%);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  &--medium {
+    min-height: 44px;
+    padding: 0 20px;
+  }
+
+  &--small {
+    min-height: 36px;
+    padding: 0 14px;
+    font-size: 13px;
+  }
+
+  &--primary {
+    color: var(--button-paper);
+    background: var(--button-accent);
+
+    &:not(:disabled):hover {
+      background: #d94c00;
+    }
+  }
+
+  &--secondary {
+    border-color: #bfbfbf;
+    color: var(--button-ink);
+    background: var(--button-paper);
+
+    &:not(:disabled):hover {
+      border-color: var(--button-ink);
+      background: #f5f5f5;
+    }
+  }
+
+  &__spinner {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 auto;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: ceneo-button-spin 700ms linear infinite;
+  }
+}
+
+@keyframes ceneo-button-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ceneo-button {
+    transition: none;
+
+    &__spinner {
+      animation-duration: 1400ms;
+    }
+  }
+}
