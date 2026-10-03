@@ -31,6 +31,8 @@ button, a, input { &:focus-visible { outline: 2px solid var(--cd-color-fixed-acc
 .label-sample { display: grid; justify-items: start; gap: 12px; code { font-size: 12px; opacity: .7; } }
 .price-grid { display: flex; flex-wrap: wrap; gap: 40px; }
 .price-sample { display: grid; justify-items: start; gap: 12px; code { font-size: 12px; opacity: .7; } }
+.rating-grid { display: flex; flex-wrap: wrap; gap: 40px; }
+.rating-sample { display: grid; justify-items: start; gap: 12px; code { font-size: 12px; opacity: .7; } }
 .card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; padding: 20px; background: var(--cd-background-background-2); border-radius: 8px; }
 .sample-content { gap: 12px; h3, p { margin: 0; } h3 { font-size: 17px; } p { font-size: 14px; line-height: 1.5; opacity: .75; } code { font-size: 12px; } }
 .layout-stage { padding-block: 16px; border: 1px dashed var(--cd-border-border-2); }

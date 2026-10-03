@@ -9,8 +9,9 @@ import { Input } from './components/input/input'
 import { Label } from './components/label/label'
 import { UiElement } from './components/ui-element/ui-element'
 import { Price } from './components/price/price'
+import { Rating } from './components/rating/rating'
 
-const sections = ['Button', 'Input', 'Label', 'Price', 'Card', 'Layout', 'Container', 'Text', 'Icon', 'UI element']
+const sections = ['Button', 'Input', 'Label', 'Price', 'Rating', 'Card', 'Layout', 'Container', 'Text', 'Icon', 'UI element']
 const variants = ['primary', 'accent', 'outline', 'selected', 'dashed', 'blank', 'gray'] as const
 const textSizes = ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl'] as const
 
@@ -45,7 +46,7 @@ export function App() {
         <aside class="preview__sidebar">
           <p class="eyebrow">Biblioteka</p>
           <nav aria-label="Komponenty">{sections.map((name, i) => <a href={`#${name.toLowerCase().replace(/\s+/g, '-')}`} key={name}><span>0{i + 1}</span>{name}</a>)}</nav>
-          <p class="preview__note">10 komponentów<br />43 ikony SVG<br />1 UI element</p>
+          <p class="preview__note">11 komponentów<br />43 ikony SVG<br />1 UI element</p>
         </aside>
         <main class="preview__main">
           <div class="preview__intro"><p class="eyebrow">Ceneo Design System</p><h1>Gotowe do użycia.</h1><p>Komponenty, warianty i ikony. Sprawdź, jak wyglądają w jasnym i ciemnym motywie.</p></div>
@@ -76,6 +77,14 @@ export function App() {
             <div class="price-grid">
               <div class="price-sample"><code>z prefiksem</code><Price amount={2400} /></div>
               <div class="price-sample"><code>bez prefiksu</code><Price amount={1299} decimal="99" showPrefix={false} /></div>
+            </div>
+          </section>
+          <section id="rating" class="preview-section">
+            <header><h2>Rating</h2><span>3 warianty</span></header>
+            <div class="rating-grid">
+              <div class="rating-sample"><code>default</code><Rating /></div>
+              <div class="rating-sample"><code>small</code><Rating size="small" /></div>
+              <div class="rating-sample"><code>compact</code><Rating size="compact" /></div>
             </div>
           </section>
           <section id="card" class="preview-section">

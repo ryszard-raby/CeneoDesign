@@ -1,0 +1,51 @@
+.cd-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--cd-spacing-component-gap-horizontal) * 1px);
+  color: var(--cd-text-text);
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  white-space: nowrap;
+
+  &__stars {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  &__star {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: var(--cd-background-background-3);
+    mask: url('../../icons/Star.svg') center / contain no-repeat;
+
+    &--full { background: var(--cd-color-fixed-yellow); }
+    &--half { background: linear-gradient(90deg, var(--cd-color-fixed-yellow) 50%, var(--cd-background-background-3) 50%); }
+  }
+
+  &__value {
+    font-size: calc(var(--cd-text-sm) * 1px);
+    font-weight: var(--cd-font-weight-bold);
+    line-height: calc(var(--cd-line-height-sm) * 1px);
+  }
+
+  &__count {
+    color: var(--cd-text-text-2);
+    font-size: calc(var(--cd-text-sm) * 1px);
+    font-weight: var(--cd-font-weight-normal);
+    line-height: calc(var(--cd-line-height-sm) * 1px);
+  }
+
+  &--small,
+  &--compact {
+    .cd-rating__star { width: 16px; height: 16px; }
+    .cd-rating__value,
+    .cd-rating__count {
+      font-size: calc(var(--cd-text-xs) * 1px);
+      line-height: calc(var(--cd-line-height-xs) * 1px);
+    }
+  }
+
+  &--compact .cd-rating__stars { gap: 0; }
+}

@@ -29,9 +29,12 @@
   --cd-color-fixed-primary: #ff6400;
   --cd-color-fixed-accent: #0078d4;
   --cd-color-fixed-white: #ffffff;
+  --cd-color-fixed-yellow: #ffc40d;
   --cd-text-text: #000000;
+  --cd-text-text-2: #647481;
   --cd-background-backgorund: #ffffff;
   --cd-background-background-2: #f2f5f7;
+  --cd-background-background-3: #d9d9d9;
   --cd-border-border: #000000;
   --cd-border-border-2: #9aa7b1;
   --cd-spacing-layout-gap: 0;
@@ -57,6 +60,7 @@
 :root[data-cd-color-mode="dark"] {
   --cd-color-fixed-accent: #0898ff;
   --cd-text-text: #ffffff;
+  --cd-text-text-2: #9aa7b1;
   --cd-background-backgorund: #16202a;
   --cd-background-background-2: #333a42;
   --cd-border-border: #ffffff;
