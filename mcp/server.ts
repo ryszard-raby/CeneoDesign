@@ -8,6 +8,7 @@ import { z } from 'zod'
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const sourceRoot = resolve(projectRoot, 'src')
 const componentRoot = resolve(sourceRoot, 'components')
+const tokenFile = resolve(sourceRoot, 'style', 'figma-variables.css')
 const sourceExtensions = new Set(['.css', '.js', '.jsx', '.scss', '.ts', '.tsx'])
 const styleExtensions = new Set(['.css', '.scss'])
 const manifestExtensions = new Set(['.json'])
@@ -70,6 +71,54 @@ async function findComponentSpecs() {
   )
 }
 
+type TokenValues = Record<string, string>
+
+interface DesignTokens {
+  default: TokenValues
+  mobile: TokenValues
+  dark: TokenValues
+  mobileDark: TokenValues
+}
+
+function parseTokenDeclarations(block: string): TokenValues {
+  return Object.fromEntries(
+    Array.from(block.matchAll(/(--cd-[\w-]+)\s*:\s*([^;]+);/g), (match) => [
+      match[1],
+      match[2].trim(),
+    ]),
+  )
+}
+
+async function readDesignTokens(): Promise<DesignTokens> {
+  const source = await readFile(tokenFile, 'utf8')
+  const blocks = Array.from(source.matchAll(/([^{}]+)\{([^{}]*)\}/g), (match) => ({
+    selector: match[1].replace(/\/\*[\s\S]*?\*\//g, '').trim(),
+    values: parseTokenDeclarations(match[2]),
+  }))
+  const base = blocks.find(({ selector }) => selector === ':root')?.values ?? {}
+  const mobile = blocks.find(({ selector }) => selector.includes('data-cd-theme="mobile"'))?.values ?? {}
+  const dark = blocks.find(({ selector }) => selector.includes('data-cd-color-mode="dark"'))?.values ?? {}
+
+  return {
+    default: base,
+    mobile: { ...base, ...mobile },
+    dark: { ...base, ...dark },
+    mobileDark: { ...base, ...mobile, ...dark },
+  }
+}
+
+function tokenResponse(tokens: DesignTokens) {
+  return {
+    source: 'src/style/figma-variables.css',
+    values: tokens,
+    notes: [
+      'Values are resolved from the source token file; do not infer colors from token names.',
+      'The token --cd-background-backgorund contains the spelling used by the source design system.',
+      'Use default for the standard light theme, dark for data-cd-color-mode="dark", and mobile for data-cd-theme="mobile".',
+    ],
+  }
+}
+
 const server = new McpServer({
   name: 'ceneo-design-components',
   version: '1.0.0',
@@ -119,6 +168,7 @@ server.registerTool(
 
     const response = {
       component: match.spec,
+      designTokens: tokenResponse(await readDesignTokens()),
       implementationInstructions: {
         targetStack: targetStack ?? 'Detect from the target application.',
         dependencyPolicy: 'Do not add dependencies for this component.',
@@ -126,6 +176,7 @@ server.registerTool(
           'Inspect the target application conventions before writing code.',
           'Implement the contract with its existing framework, language and styling system.',
           'Reuse existing primitives and tokens where possible.',
+          'Use the resolved design token values from this response; do not guess colors from token names.',
           'Adapt prop names to local conventions while preserving behavior and accessibility.',
           'Validate with the target application build and relevant tests.',
         ],
@@ -136,6 +187,18 @@ server.registerTool(
       content: [{ type: 'text', text: JSON.stringify(response, null, 2) }],
     }
   },
+)
+
+server.registerTool(
+  'get_design_tokens',
+  {
+    description:
+      'Get exact Ceneo design token values, including color values and light, dark and mobile theme overrides.',
+    inputSchema: {},
+  },
+  async () => ({
+    content: [{ type: 'text', text: JSON.stringify(tokenResponse(await readDesignTokens()), null, 2) }],
+  }),
 )
 
 server.registerTool(
