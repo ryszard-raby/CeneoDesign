@@ -27,6 +27,8 @@ button, a, input { &:focus-visible { outline: 2px solid var(--cd-color-fixed-acc
 .preview-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--cd-border-border-2); }
 .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
 .input-sample { display: grid; align-content: start; gap: 10px; > span { font-size: 12px; opacity: .7; } }
+.label-grid { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 28px; }
+.label-sample { display: grid; justify-items: start; gap: 12px; code { font-size: 12px; opacity: .7; } }
 .card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; padding: 20px; background: var(--cd-background-background-2); border-radius: 8px; }
 .sample-content { gap: 12px; h3, p { margin: 0; } h3 { font-size: 17px; } p { font-size: 14px; line-height: 1.5; opacity: .75; } code { font-size: 12px; } }
 .layout-stage { padding-block: 16px; border: 1px dashed var(--cd-border-border-2); }

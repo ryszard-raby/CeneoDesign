@@ -1,6 +1,10 @@
 /* Component tokens from the CeneoDesign Figma collections. */
 :root {
   --cd-spacing-component-gap-horizontal: 12;
+  --cd-spacing-component-gap-sm: 4;
+  --cd-spacing-label-height: 20;
+  --cd-spacing-label-padding-inline: 4;
+  --cd-spacing-label-radius: 6;
   --cd-spacing-button-height: 40;
   --cd-spacing-button-small-height: 30;
   --cd-spacing-button-padding-inline: 18;

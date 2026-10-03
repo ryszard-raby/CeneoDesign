@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "name": "Label",
+  "description": "Compact primary-colored label with filled and plain variants and an optional leading icon.",
+  "naming": {
+    "cssClassPrefix": "cd-",
+    "baseClass": "cd-label"
+  },
+  "semantics": {
+    "element": "span",
+    "nativeAttributes": "Forward native span attributes.",
+    "iconAria": "Treat the optional leading icon as decorative."
+  },
+  "props": [
+    { "name": "children", "type": "renderable content", "required": false, "default": "Label" },
+    { "name": "variant", "type": "filled | plain", "required": false, "default": "filled" },
+    { "name": "iconStart", "type": "renderable content", "required": false, "description": "Decorative 16px icon displayed before the text." }
+  ],
+  "layout": {
+    "display": "inline-flex",
+    "alignment": "center",
+    "heightToken": "--cd-spacing-label-height",
+    "gapToken": "--cd-spacing-component-gap-sm",
+    "whiteSpace": "nowrap",
+    "iconSize": "16px"
+  },
+  "visual": {
+    "fontSizeToken": "--cd-text-xs",
+    "fontWeightToken": "--cd-font-weight-normal",
+    "lineHeightToken": "--cd-line-height-sm",
+    "primaryToken": "--cd-color-fixed-primary",
+    "filled": {
+      "backgroundToken": "--cd-color-fixed-primary",
+      "foregroundToken": "--cd-color-fixed-white",
+      "paddingInlineToken": "--cd-spacing-label-padding-inline",
+      "borderRadiusToken": "--cd-spacing-label-radius"
+    },
+    "plain": {
+      "foregroundToken": "--cd-color-fixed-primary"
+    }
+  },
+  "accessibility": [
+    "Use span semantics because this component represents a visual badge rather than a form label.",
+    "Hide decorative icons from assistive technology.",
+    "Keep visible text unless the consuming application supplies another accessible name."
+  ],
+  "adaptationRules": [
+    "Implement Label as a reusable component in the target application's framework.",
+    "Preserve both filled and plain variants.",
+    "Use the supplied design tokens for all tokenized values.",
+    "Do not install Preact, Sass or any dependency solely for this component."
+  ]
+}

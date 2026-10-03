@@ -6,8 +6,9 @@ import { Container } from './components/container/container'
 import { Icon, iconNames } from './components/icon/icon'
 import { Text } from './components/text/text'
 import { Input } from './components/input/input'
+import { Label } from './components/label/label'
 
-const sections = ['Button', 'Input', 'Card', 'Layout', 'Container', 'Text', 'Icon']
+const sections = ['Button', 'Input', 'Label', 'Card', 'Layout', 'Container', 'Text', 'Icon']
 const variants = ['primary', 'accent', 'outline', 'selected', 'dashed', 'blank', 'gray'] as const
 const textSizes = ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl'] as const
 
@@ -42,7 +43,7 @@ export function App() {
         <aside class="preview__sidebar">
           <p class="eyebrow">Biblioteka</p>
           <nav aria-label="Komponenty">{sections.map((name, i) => <a href={`#${name.toLowerCase()}`} key={name}><span>0{i + 1}</span>{name}</a>)}</nav>
-          <p class="preview__note">7 komponentów<br />43 ikony SVG</p>
+          <p class="preview__note">8 komponentów<br />43 ikony SVG</p>
         </aside>
         <main class="preview__main">
           <div class="preview__intro"><p class="eyebrow">Ceneo Design System</p><h1>Gotowe do użycia.</h1><p>Komponenty, warianty i ikony. Sprawdź, jak wyglądają w jasnym i ciemnym motywie.</p></div>
@@ -57,6 +58,15 @@ export function App() {
               <label class="input-sample"><span>Domyślny</span><Input aria-label="Domyślny input" /></label>
               <label class="input-sample"><span>Z wartością</span><Input aria-label="Input z wartością" value="Ceneo Design" /></label>
               <label class="input-sample"><span>Wyłączony</span><Input aria-label="Wyłączony input" disabled /></label>
+            </div>
+          </section>
+          <section id="label" class="preview-section">
+            <header><h2>Label</h2><span>2 warianty · opcjonalna ikona</span></header>
+            <div class="label-grid">
+              <div class="label-sample"><code>filled</code><Label>Label</Label></div>
+              <div class="label-sample"><code>plain</code><Label variant="plain">Label</Label></div>
+              <div class="label-sample"><code>filled + icon</code><Label iconStart={<Icon name="check" size={16} />}>Label</Label></div>
+              <div class="label-sample"><code>plain + icon</code><Label variant="plain" iconStart={<Icon name="check" size={16} />}>Label</Label></div>
             </div>
           </section>
           <section id="card" class="preview-section">
