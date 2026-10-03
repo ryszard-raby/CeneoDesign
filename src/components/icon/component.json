@@ -2,6 +2,10 @@
   "schemaVersion": 1,
   "name": "Icon",
   "description": "Accessible SVG icon renderer with a fixed icon catalog, configurable size and optional accessible label.",
+  "naming": {
+    "cssClassPrefix": "cd-",
+    "baseClass": "cd-icon"
+  },
   "semantics": {
     "element": "img",
     "assetSource": "src/icons/*.svg",

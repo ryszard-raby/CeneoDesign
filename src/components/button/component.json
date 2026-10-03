@@ -2,6 +2,10 @@
   "schemaVersion": 1,
   "name": "Button",
   "description": "Action control with seven visual variants, two sizes and optional leading or trailing icons.",
+  "naming": {
+    "cssClassPrefix": "cd-",
+    "baseClass": "cd-button"
+  },
   "semantics": {
     "element": "button",
     "defaultType": "button",

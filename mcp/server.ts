@@ -20,6 +20,10 @@ const componentSpecSchema = z
     schemaVersion: z.number(),
     name: z.string(),
     description: z.string(),
+    naming: z.object({
+      cssClassPrefix: z.literal('cd-'),
+      baseClass: z.string().regex(/^cd-[a-z0-9]+(?:-[a-z0-9]+)*$/),
+    }),
   })
   .passthrough()
 
@@ -204,7 +208,7 @@ function resolvedStyles(spec: Record<string, unknown>, tokens: DesignTokens) {
 
 const server = new McpServer({
   name: 'ceneo-design-components',
-  version: '1.4.0',
+  version: '1.5.0',
 })
 
 server.registerTool(
@@ -220,6 +224,8 @@ server.registerTool(
       name: spec.name,
       description: spec.description,
       specPath: path,
+      cssClassPrefix: spec.naming.cssClassPrefix,
+      baseClass: spec.naming.baseClass,
     }))
 
     return {
@@ -232,7 +238,7 @@ server.registerTool(
   'get_component_spec',
   {
     description:
-      'Get a component contract that MUST be implemented as a reusable native component of the required client framework or application stack, with exact resolved styles, colors, and the complete design token CSS file. The client stack is required. Do not return a plain HTML snippet, standalone script, or source from another framework.',
+      'Get a component contract that MUST be implemented as a reusable native component of the required client framework or application stack, using the required cd- CSS class prefix, with exact resolved styles, colors, and the complete design token CSS file. The client stack is required. Do not return a plain HTML snippet, standalone script, or source from another framework.',
     inputSchema: {
       name: z.string().regex(/^[A-Z][A-Za-z0-9_]*$/).describe('Component name'),
       targetStack: z
@@ -270,6 +276,17 @@ server.registerTool(
             'Do not create a standalone JavaScript widget outside the client framework.',
             'Do not copy the Preact implementation when the client uses another framework.',
             'Do not install another framework or dependencies solely to host this component.',
+          ],
+        },
+        naming: {
+          required: true,
+          cssClassPrefix: match.spec.naming.cssClassPrefix,
+          baseClass: match.spec.naming.baseClass,
+          rules: [
+            'Use the baseClass on the component root element or host element.',
+            'Prefix every component-owned CSS class and selector with cssClassPrefix.',
+            'Keep modifier and state classes prefixed, for example cd-button--small or cd-button:focus-visible.',
+            'Do not use an unprefixed component class such as button, card, container, icon or layout.',
           ],
         },
         dependencyPolicy: 'Do not add dependencies for this component.',

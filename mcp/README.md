@@ -12,7 +12,8 @@ Local MCP server exposing technology-neutral component contracts to coding agent
 	returns behavior, API, accessibility and visual rules, including direct
 	`resolvedStyles` values for every theme. Its response requires the agent to
 	create and expose a reusable native component in that stack, without
-	installing dependencies or returning a plain HTML snippet.
+	installing dependencies or returning a plain HTML snippet. Every generated
+	component must use the `cd-` CSS class prefix and the manifest's base class.
 - `get_design_tokens` returns the complete `src/theme/figma-variables.css` file
 	plus parsed values for default, mobile, dark and mobile-dark themes. Copy the
 	complete CSS file to the client to preserve all token and theme selectors.
@@ -28,8 +29,9 @@ Example prompt in another application:
 > expose it as a reusable native component in that stack, using this
 > application's existing conventions and primitives. Preserve its variants,
 > icon slots and accessibility behavior. Do not add dependencies or return a
-> plain HTML snippet. Use the resolved design token values from the response;
-> do not guess colors from token names.
+> plain HTML snippet. Use the `cd-button` root class and prefix all
+> component-owned classes with `cd-`. Use the resolved design token values
+> from the response; do not guess colors from token names.
 
 VS Code discovers the server in this workspace through `.vscode/mcp.json`. To
 use it from other workspaces, register it in the VS Code user profile with an
