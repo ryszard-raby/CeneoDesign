@@ -7,8 +7,9 @@ import { Icon, iconNames } from './components/icon/icon'
 import { Text } from './components/text/text'
 import { Input } from './components/input/input'
 import { Label } from './components/label/label'
+import { UiElement } from './components/ui-element/ui-element'
 
-const sections = ['Button', 'Input', 'Label', 'Card', 'Layout', 'Container', 'Text', 'Icon']
+const sections = ['Button', 'Input', 'Label', 'Card', 'Layout', 'Container', 'Text', 'Icon', 'UI element']
 const variants = ['primary', 'accent', 'outline', 'selected', 'dashed', 'blank', 'gray'] as const
 const textSizes = ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl'] as const
 
@@ -33,7 +34,7 @@ export function App() {
   return (
     <div class="preview">
       <header class="preview__header">
-        <a href="#" class="preview__brand"><img src="./src/ui elements/logo.svg" alt="Ceneo Logo" /> Design</a>
+        <a href="#" class="preview__brand"><UiElement name="logo" /> Design</a>
         <div class="theme-switch" role="group" aria-label="Motyw podglądu">
           <button type="button" aria-pressed={theme === 'light'} onClick={() => setTheme('light')}>Jasny</button>
           <button type="button" aria-pressed={theme === 'dark'} onClick={() => setTheme('dark')}>Ciemny</button>
@@ -42,8 +43,8 @@ export function App() {
       <div class="preview__body">
         <aside class="preview__sidebar">
           <p class="eyebrow">Biblioteka</p>
-          <nav aria-label="Komponenty">{sections.map((name, i) => <a href={`#${name.toLowerCase()}`} key={name}><span>0{i + 1}</span>{name}</a>)}</nav>
-          <p class="preview__note">8 komponentów<br />43 ikony SVG</p>
+          <nav aria-label="Komponenty">{sections.map((name, i) => <a href={`#${name.toLowerCase().replace(/\s+/g, '-')}`} key={name}><span>0{i + 1}</span>{name}</a>)}</nav>
+          <p class="preview__note">9 komponentów<br />43 ikony SVG<br />1 UI element</p>
         </aside>
         <main class="preview__main">
           <div class="preview__intro"><p class="eyebrow">Ceneo Design System</p><h1>Gotowe do użycia.</h1><p>Komponenty, warianty i ikony. Sprawdź, jak wyglądają w jasnym i ciemnym motywie.</p></div>
@@ -104,6 +105,12 @@ export function App() {
             <label class="icon-search">Szukaj ikony<input type="search" value={search} onInput={event => setSearch(event.currentTarget.value)} placeholder="np. cart, search, heart" /></label>
             <div class="icon-grid">{filteredIcons.map(name => <div class="icon-sample" key={name}><Icon name={name} /><code>{name}</code></div>)}</div>
             {filteredIcons.length === 0 && <p role="status">Nie znaleziono ikon.</p>}
+          </section>
+          <section id="ui-element" class="preview-section">
+            <header><h2>UI element</h2><span>1 element</span></header>
+            <div class="ui-element-grid">
+              <div class="ui-element-sample"><UiElement name="logo" label="Ceneo" /><code>logo</code></div>
+            </div>
           </section>
         </main>
       </div>

@@ -13,7 +13,7 @@ button, a, input { &:focus-visible { outline: 2px solid var(--cd-color-fixed-acc
 .eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; }
 .preview {
   &__header { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px 40px; border-bottom: 1px solid var(--cd-border-border-2); background: var(--cd-background-backgorund); }
-  &__brand { text-decoration: none; font-size: 20px; font-weight: 600; span { color: var(--cd-color-fixed-primary); font-size: 28px; font-weight: 800; margin-right: 10px; } }
+  &__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-size: 20px; font-weight: 600; }
   &__body { display: grid; grid-template-columns: 220px minmax(0, 1fr); max-width: 1600px; margin: auto; }
   &__sidebar { padding: 40px 24px; nav { display: grid; gap: 6px; } nav a { display: flex; gap: 16px; padding: 12px 8px; text-decoration: none; border-radius: 6px; &:hover { background: var(--cd-background-backgorund); } span { opacity: .55; font-size: 12px; } } }
   &__note { margin-top: 40px; font-size: 12px; line-height: 1.8; opacity: .65; }
@@ -41,6 +41,8 @@ button, a, input { &:focus-visible { outline: 2px solid var(--cd-color-fixed-acc
 .icon-search { display: grid; gap: 8px; max-width: 360px; font-size: 13px; margin-bottom: 24px; input { width: 100%; padding: 12px; color: var(--cd-text-text); background: var(--cd-background-background-2); border: 1px solid var(--cd-border-border-2); border-radius: 6px; } }
 .icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
 .icon-sample { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 20px 8px; border-radius: 6px; background: var(--cd-background-background-2); code { font-size: 11px; } }
+.ui-element-grid { display: flex; flex-wrap: wrap; gap: 16px; }
+.ui-element-sample { display: grid; justify-items: start; gap: 14px; min-width: 180px; padding: 24px; border-radius: 6px; background: var(--cd-background-background-2); code { font-size: 11px; } }
 @media (max-width: 720px) {
   .preview__header { padding: 16px; }
   .preview__body { display: block; }

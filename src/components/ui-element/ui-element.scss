@@ -1,0 +1,12 @@
+.cd-ui-element {
+  display: block;
+  flex: none;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.cd-ui-element--logo {
+  width: 102px;
+  aspect-ratio: 102 / 28;
+}
