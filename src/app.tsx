@@ -2,12 +2,14 @@ import { Button } from './components/button/button'
 import { Layout } from './components/layout/layout'
 import { Card } from './components/card/card'
 import { Container } from './components/container/container'
+import { Icon, iconNames } from './components/icon/icon'
 
 const components = [
   { name: 'Button', status: 'Gotowy' },
   { name: 'Layout', status: 'Gotowy' },
   { name: 'Card', status: 'Gotowy' },
   { name: 'Container', status: 'Gotowy' },
+  { name: 'Icon', status: 'Gotowy' },
   { name: 'Input', status: 'Gotowy' },
   { name: 'Modal', status: 'W planach' },
 ]
@@ -86,6 +88,10 @@ export function App() {
             </div>
           ))}
         </div>
+        <div class="button-showcase__icons">
+          <Button iconStart={<Icon name="cart-plus" />}>Dodaj do koszyka</Button>
+          <Button variant="outline" iconEnd={<Icon name="angle-right" />}>Zobacz więcej</Button>
+        </div>
       </section>
       <section class="structure-showcase" aria-labelledby="structure-heading">
         <p class="eyebrow">Komponenty 02–04</p>
@@ -104,6 +110,18 @@ export function App() {
               ))}
             </div>
           </Layout>
+        </div>
+      </section>
+      <section class="icon-showcase" aria-labelledby="icon-heading">
+        <p class="eyebrow">Komponent 05</p>
+        <h2 id="icon-heading">Icon</h2>
+        <div class="icon-showcase__grid">
+          {iconNames.map((name) => (
+            <div class="icon-showcase__item" key={name}>
+              <Icon name={name} />
+              <code>{name}</code>
+            </div>
+          ))}
         </div>
       </section>
     </main>
