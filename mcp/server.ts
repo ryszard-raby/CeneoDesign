@@ -8,6 +8,7 @@ import { z } from 'zod'
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const sourceRoot = resolve(projectRoot, 'src')
 const componentRoot = resolve(sourceRoot, 'components')
+const readmeFile = resolve(projectRoot, 'README.md')
 const tokenFiles = [
   resolve(sourceRoot, 'theme', 'figma-variables.css'),
 ]
@@ -214,14 +215,47 @@ function resolvedStyles(spec: Record<string, unknown>, tokens: DesignTokens) {
 
 const server = new McpServer({
   name: 'ceneo-design-components',
-  version: '1.5.0',
+  version: '1.6.0',
 })
+
+server.registerTool(
+  'get_started',
+  {
+    description:
+      'REQUIRED FIRST STEP. Read the Ceneo Design usage guide and download the complete CSS variables file before listing or implementing components.',
+    inputSchema: {},
+  },
+  async () => {
+    const [readme, tokenDocument] = await Promise.all([
+      readFile(readmeFile, 'utf8'),
+      readDesignTokenDocument(),
+    ])
+
+    const response = {
+      instruction: 'Read the guide and copy the complete CSS file before requesting a component specification.',
+      guide: {
+        path: 'README.md',
+        content: readme,
+      },
+      designTokens: tokenResponse(tokenDocument),
+      nextSteps: [
+        'Apply the complete cssFile.content in the target application.',
+        'Call list_components.',
+        'Call get_component_spec with the selected component name and target stack.',
+      ],
+    }
+
+    return {
+      content: [{ type: 'text', text: JSON.stringify(response, null, 2) }],
+    }
+  },
+)
 
 server.registerTool(
   'list_components',
   {
     description:
-      'List reusable components that have technology-neutral implementation specifications.',
+      'After get_started has been called, list reusable components that have technology-neutral implementation specifications.',
     inputSchema: {},
   },
   async () => {
@@ -244,7 +278,7 @@ server.registerTool(
   'get_component_spec',
   {
     description:
-      'Get a component contract that MUST be implemented as a reusable native component of the required client framework or application stack, using the required cd- CSS class prefix, with exact resolved styles, colors, and the complete design token CSS file. The client stack is required. Do not return a plain HTML snippet, standalone script, or source from another framework.',
+      'Call get_started first. Then get a component contract that MUST be implemented as a reusable native component of the required client framework or application stack, using the required cd- CSS class prefix, with exact resolved styles, colors, and the complete design token CSS file. The client stack is required. Do not return a plain HTML snippet, standalone script, or source from another framework.',
     inputSchema: {
       name: z.string().regex(/^[A-Z][A-Za-z0-9_]*$/).describe('Component name'),
       targetStack: z
@@ -317,7 +351,7 @@ server.registerTool(
   'get_design_tokens',
   {
     description:
-      'Get the complete Ceneo figma-variables.css file plus parsed values for light, dark and mobile themes. Copy the full CSS file to the client.',
+      'Call get_started first. Get the complete Ceneo figma-variables.css file plus parsed values for light, dark and mobile themes. Copy the full CSS file to the client.',
     inputSchema: {},
   },
   async () => {
@@ -333,7 +367,7 @@ server.registerTool(
   'read_component',
   {
     description:
-      'Read framework-specific reference source only when implementation detail is needed. Prefer get_component_spec for use in another app.',
+      'Call get_started first. Read framework-specific reference source only when implementation detail is needed. Prefer get_component_spec for use in another app.',
     inputSchema: {
       path: z.string().describe('Source-relative path, for example components/Button/button.tsx'),
     },
@@ -352,7 +386,7 @@ server.registerTool(
   'read_styles',
   {
     description:
-      'Read a CSS or SCSS file with the design tokens and styles used by the components.',
+      'Call get_started first. Read a CSS or SCSS file with the design tokens and styles used by the components.',
     inputSchema: {
       path: z.string().default('styles.scss').describe('Style path relative to src'),
     },
