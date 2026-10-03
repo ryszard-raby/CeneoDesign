@@ -1,7 +1,13 @@
 import { Button } from './components/button/button'
+import { Layout } from './components/layout/layout'
+import { Card } from './components/card/card'
+import { Container } from './components/container/container'
 
 const components = [
   { name: 'Button', status: 'Gotowy' },
+  { name: 'Layout', status: 'Gotowy' },
+  { name: 'Card', status: 'Gotowy' },
+  { name: 'Container', status: 'Gotowy' },
   { name: 'Input', status: 'Gotowy' },
   { name: 'Modal', status: 'W planach' },
 ]
@@ -47,7 +53,7 @@ export function App() {
           </ul>
           <div class="component-preview" aria-label="Przykłady przycisku">
             <Button>Dodaj do koszyka</Button>
-            <Button variant="secondary">Obserwuj cenę</Button>
+            <Button variant="outline">Obserwuj cenę</Button>
           </div>
         </div>
 
@@ -79,6 +85,25 @@ export function App() {
               <Button variant={variant} size="small">Button</Button>
             </div>
           ))}
+        </div>
+      </section>
+      <section class="structure-showcase" aria-labelledby="structure-heading">
+        <p class="eyebrow">Komponenty 02–04</p>
+        <h2 id="structure-heading">Layout, Card i Container</h2>
+        <p>Układ: Layout → Card → Container → zawartość.</p>
+        <div class="structure-showcase__viewport">
+          <Layout>
+            <div class="structure-showcase__cards">
+              {(['white', 'outlined', 'border-bottom', 'gray'] as const).map((cardStyle) => (
+                <Card cardStyle={cardStyle} class="structure-showcase__sample" key={cardStyle}>
+                  <Container direction={cardStyle === 'white' ? 'horizontal' : 'vertical'}>
+                    <strong>{cardStyle}</strong>
+                    <span>Przykładowa zawartość karty</span>
+                  </Container>
+                </Card>
+              ))}
+            </div>
+          </Layout>
         </div>
       </section>
     </main>

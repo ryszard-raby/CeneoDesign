@@ -1,0 +1,16 @@
+.cd-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: calc(var(--cd-spacing-card-padding-block) * 1px)
+    calc(var(--cd-spacing-card-padding-inline) * 1px);
+  border-radius: calc(var(--cd-spacing-card-radius) * 1px);
+
+  &--white { background: var(--cd-background-backgorund); }
+  &--gray { background: var(--cd-background-background-2); }
+  &--outlined { border: 1px solid var(--cd-border-border-2); }
+  &--border-bottom { border-bottom: 1px solid var(--cd-border-border-2); border-radius: 0; }
+}

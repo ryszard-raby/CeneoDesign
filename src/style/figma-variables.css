@@ -1,4 +1,4 @@
-/* Button tokens from the CeneoDesign Figma collections. */
+/* Component tokens from the CeneoDesign Figma collections. */
 :root {
   --cd-spacing-component-gap-horizontal: 12;
   --cd-spacing-button-height: 40;
@@ -16,11 +16,24 @@
   --cd-background-background-2: #f2f5f7;
   --cd-border-border: #000000;
   --cd-border-border-2: #9aa7b1;
+  --cd-spacing-layout-gap: 0;
+  --cd-spacing-layout-padding-horizontal: 16;
+  --cd-spacing-card-gap: 16;
+  --cd-spacing-card-padding-inline: 16;
+  --cd-spacing-card-padding-block: 16;
+  --cd-spacing-card-radius: 6;
+  --cd-spacing-component-gap-vertical: 8;
 }
 
 :root[data-cd-theme="mobile"] {
   --cd-spacing-component-gap-horizontal: 6;
   --cd-spacing-button-padding-inline: 8;
+  --cd-spacing-layout-padding-horizontal: 0;
+  --cd-spacing-card-gap: 12;
+  --cd-spacing-card-padding-inline: 12;
+  --cd-spacing-card-padding-block: 12;
+  --cd-spacing-card-radius: 0;
+  --cd-spacing-component-gap-vertical: 6;
 }
 
 :root[data-cd-color-mode="dark"] {
