@@ -31,6 +31,9 @@ button, a, input { &:focus-visible { outline: 2px solid var(--cd-color-fixed-acc
 .container-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; code { font-size: 12px; } }
 .container-demo { margin-top: 16px; gap: 8px; }
 .demo-item { padding: 12px; font-size: 13px; background: var(--cd-background-background-2); border-radius: 4px; }
+.text-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; padding: 24px; border-radius: 8px; background: var(--cd-background-background-2); }
+.text-grid__column { display: grid; align-content: start; gap: 12px; min-width: 0; code { margin-bottom: 4px; font-size: 12px; opacity: .65; } }
+.text-guidance { display: grid; gap: 10px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--cd-border-border-2); }
 .icon-search { display: grid; gap: 8px; max-width: 360px; font-size: 13px; margin-bottom: 24px; input { width: 100%; padding: 12px; color: var(--cd-text-text); background: var(--cd-background-background-2); border: 1px solid var(--cd-border-border-2); border-radius: 6px; } }
 .icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
 .icon-sample { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 20px 8px; border-radius: 6px; background: var(--cd-background-background-2); code { font-size: 11px; } }
@@ -41,5 +44,6 @@ button, a, input { &:focus-visible { outline: 2px solid var(--cd-color-fixed-acc
   .preview__main { padding: 16px 16px 40px; }
   .preview-section { padding: 18px; }
   .card-grid, .container-grid { grid-template-columns: 1fr; }
+  .text-grid { gap: 20px; padding: 16px; }
   .card-grid { padding: 12px; }
 }

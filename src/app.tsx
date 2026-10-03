@@ -4,9 +4,11 @@ import { Layout } from './components/layout/layout'
 import { Card } from './components/card/card'
 import { Container } from './components/container/container'
 import { Icon, iconNames } from './components/icon/icon'
+import { Text } from './components/text/text'
 
-const sections = ['Button', 'Card', 'Layout', 'Container', 'Icon']
+const sections = ['Button', 'Card', 'Layout', 'Container', 'Text', 'Icon']
 const variants = ['primary', 'accent', 'outline', 'selected', 'dashed', 'blank', 'gray'] as const
+const textSizes = ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl'] as const
 
 function initialTheme(): 'light' | 'dark' {
   try {
@@ -39,7 +41,7 @@ export function App() {
         <aside class="preview__sidebar">
           <p class="eyebrow">Biblioteka</p>
           <nav aria-label="Komponenty">{sections.map((name, i) => <a href={`#${name.toLowerCase()}`} key={name}><span>0{i + 1}</span>{name}</a>)}</nav>
-          <p class="preview__note">5 komponentów<br />43 ikony SVG</p>
+          <p class="preview__note">6 komponentów<br />43 ikony SVG</p>
         </aside>
         <main class="preview__main">
           <div class="preview__intro"><p class="eyebrow">Ceneo Design System</p><h1>Gotowe do użycia.</h1><p>Komponenty, warianty i ikony. Sprawdź, jak wyglądają w jasnym i ciemnym motywie.</p></div>
@@ -60,6 +62,23 @@ export function App() {
           <section id="container" class="preview-section">
             <header><h2>Container</h2><span>2 kierunki</span></header>
             <div class="container-grid">{(['horizontal', 'vertical'] as const).map(direction => <Card cardStyle="outlined" key={direction}><code>{direction}</code><Container direction={direction} class="container-demo">{['Pierwszy', 'Drugi', 'Trzeci'].map(label => <span class="demo-item" key={label}>{label}</span>)}</Container></Card>)}</div>
+          </section>
+          <section id="text" class="preview-section">
+            <header><h2>Text</h2><span>7 rozmiarów · 2 grubości</span></header>
+            <div class="text-grid">
+              <div class="text-grid__column">
+                <code>normal</code>
+                {textSizes.map(size => <Text size={size} key={size}>Text</Text>)}
+              </div>
+              <div class="text-grid__column">
+                <code>bold</code>
+                {textSizes.map(size => <Text size={size} weight="bold" key={size}>Text</Text>)}
+              </div>
+            </div>
+            <div class="text-guidance">
+              <Text as="p" size="sm">Tekst podstawowy: sm / normal</Text>
+              <Text as="h3" size="lg" weight="bold">Nagłówek: lg / bold</Text>
+            </div>
           </section>
           <section id="icon" class="preview-section">
             <header><h2>Icon</h2><span>{filteredIcons.length} / {iconNames.length} ikon</span></header>
