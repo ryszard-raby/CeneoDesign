@@ -2,6 +2,10 @@
   "schemaVersion": 1,
   "name": "Text",
   "description": "Responsive text primitive with seven token-based sizes, two weights and configurable semantic markup.",
+  "naming": {
+    "cssClassPrefix": "cd-",
+    "baseClass": "cd-text"
+  },
   "semantics": {
     "defaultElement": "span",
     "nativeAttributes": "Forward native attributes for the selected text element.",

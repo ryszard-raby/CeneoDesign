@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "name": "Input",
+  "description": "Native single-line text field with Ceneo typography, border and radius tokens.",
+  "naming": {
+    "cssClassPrefix": "cd-",
+    "baseClass": "cd-input"
+  },
+  "semantics": {
+    "element": "input",
+    "defaultType": "text",
+    "nativeAttributes": "Forward the target stack's native input attributes, form behavior and events.",
+    "placeholder": "Use Placeholder when no placeholder is supplied."
+  },
+  "props": [
+    { "name": "type", "type": "native input type", "required": false, "default": "text" },
+    { "name": "placeholder", "type": "string", "required": false, "default": "Placeholder" },
+    { "name": "value", "type": "native input value", "required": false },
+    { "name": "disabled", "type": "boolean", "required": false, "default": false }
+  ],
+  "layout": {
+    "width": "100%",
+    "maxWidth": "280px",
+    "height": "40px",
+    "paddingInline": "12px",
+    "boxSizing": "border-box"
+  },
+  "visual": {
+    "backgroundToken": "--cd-background-backgorund",
+    "foregroundToken": "--cd-text-text",
+    "fontSizeToken": "--cd-text-sm",
+    "fontWeightToken": "--cd-font-weight-normal",
+    "border": "1px solid var(--cd-border-border-2)",
+    "borderRadiusToken": "--cd-radius-md",
+    "focusVisible": {
+      "outline": "2px solid var(--cd-color-fixed-accent)",
+      "outlineOffset": "1px"
+    },
+    "disabled": { "opacity": 0.5, "cursor": "not-allowed" }
+  },
+  "accessibility": [
+    "Use the target stack's native input element or input primitive.",
+    "Associate a visible label with the field in consuming forms.",
+    "Forward name, value, required, disabled, aria attributes and input events.",
+    "Keep a visible keyboard focus indication."
+  ],
+  "adaptationRules": [
+    "Implement Input as a reusable native form component in the target application's framework.",
+    "Use existing design tokens for color, typography, border and radius.",
+    "Preserve native form participation and keyboard behavior.",
+    "Do not install Preact, Sass or any dependency solely for this component."
+  ]
+}

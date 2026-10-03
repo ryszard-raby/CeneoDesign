@@ -5,8 +5,9 @@ import { Card } from './components/card/card'
 import { Container } from './components/container/container'
 import { Icon, iconNames } from './components/icon/icon'
 import { Text } from './components/text/text'
+import { Input } from './components/input/input'
 
-const sections = ['Button', 'Card', 'Layout', 'Container', 'Text', 'Icon']
+const sections = ['Button', 'Input', 'Card', 'Layout', 'Container', 'Text', 'Icon']
 const variants = ['primary', 'accent', 'outline', 'selected', 'dashed', 'blank', 'gray'] as const
 const textSizes = ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl'] as const
 
@@ -41,7 +42,7 @@ export function App() {
         <aside class="preview__sidebar">
           <p class="eyebrow">Biblioteka</p>
           <nav aria-label="Komponenty">{sections.map((name, i) => <a href={`#${name.toLowerCase()}`} key={name}><span>0{i + 1}</span>{name}</a>)}</nav>
-          <p class="preview__note">6 komponentów<br />43 ikony SVG</p>
+          <p class="preview__note">7 komponentów<br />43 ikony SVG</p>
         </aside>
         <main class="preview__main">
           <div class="preview__intro"><p class="eyebrow">Ceneo Design System</p><h1>Gotowe do użycia.</h1><p>Komponenty, warianty i ikony. Sprawdź, jak wyglądają w jasnym i ciemnym motywie.</p></div>
@@ -49,6 +50,14 @@ export function App() {
             <header><h2>Button</h2><span>7 wariantów · 2 rozmiary</span></header>
             <div class="button-grid">{variants.map(variant => <div class="button-sample" key={variant}><code>{variant}</code><Button variant={variant}>Button</Button><Button variant={variant} size="small">Button</Button></div>)}</div>
             <div class="preview-row"><Button iconStart={<Icon name="cart-plus" />}>Dodaj do koszyka</Button><Button variant="outline" iconEnd={<Icon name="angle-right" />}>Zobacz więcej</Button><Button disabled>Niedostępny</Button></div>
+          </section>
+          <section id="input" class="preview-section">
+            <header><h2>Input</h2><span>Pole tekstowe</span></header>
+            <div class="input-grid">
+              <label class="input-sample"><span>Domyślny</span><Input aria-label="Domyślny input" /></label>
+              <label class="input-sample"><span>Z wartością</span><Input aria-label="Input z wartością" value="Ceneo Design" /></label>
+              <label class="input-sample"><span>Wyłączony</span><Input aria-label="Wyłączony input" disabled /></label>
+            </div>
           </section>
           <section id="card" class="preview-section">
             <header><h2>Card</h2><span>4 warianty</span></header>
