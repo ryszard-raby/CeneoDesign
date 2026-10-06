@@ -2,67 +2,71 @@
   "schemaVersion": 1,
   "name": "Icon",
   "description": "Accessible SVG icon renderer with a fixed icon catalog, configurable size and optional accessible label.",
-  "naming": {
-    "cssClassPrefix": "cd-",
-    "baseClass": "cd-icon"
-  },
-  "semantics": {
-    "element": "img",
-    "assetSource": "src/icons/*.svg",
-    "nativeAttributes": "Map the target framework's class and image attributes to the rendered image element.",
-    "decorativeBehavior": "Icons without a label are decorative; labeled icons expose their accessible name."
-  },
-  "props": [
+  "example": "<img class=\"cd-icon\" src=\"/icons/Search.svg\" width=\"24\" height=\"24\" alt=\"\" aria-hidden=\"true\" />",
+  "stylePath": "components/icon/icon.css",
+  "classes": [
+    "cd-icon",
+    "cd-icon--multicolor"
+  ],
+  "variants": {},
+  "attributes": [
     {
       "name": "name",
-      "type": "alarm | angle-down | angle-right | arrow | box | campain | cards | cart-empty | cart-fill | cart-plus | chart | check | comment | compare | contact-phone | contact | delivery | filtr | handshake | heart | incognito | loader | minus | more | note | plus | price-down | ranking | recycle | search-alt | search-check | search-plus | search | send | set | setting | sort | star | thumb | trash | user | vs | zo",
-      "required": true,
-      "description": "Name of an SVG from the design-system icon catalog."
+      "values": [
+        "alarm",
+        "angle-down",
+        "angle-right",
+        "arrow",
+        "box",
+        "campain",
+        "cards",
+        "cart-empty",
+        "cart-fill",
+        "cart-plus",
+        "chart",
+        "check",
+        "comment",
+        "compare",
+        "contact-phone",
+        "contact",
+        "delivery",
+        "filtr",
+        "handshake",
+        "heart",
+        "incognito",
+        "loader",
+        "minus",
+        "more",
+        "note",
+        "plus",
+        "price-down",
+        "ranking",
+        "recycle",
+        "search-alt",
+        "search-check",
+        "search-plus",
+        "search",
+        "send",
+        "set",
+        "setting",
+        "sort",
+        "star",
+        "thumb",
+        "trash",
+        "user",
+        "vs",
+        "zo"
+      ],
+      "required": true
     },
     {
       "name": "size",
       "type": "number",
-      "required": false,
-      "default": 24,
-      "description": "Rendered width and height in pixels."
+      "default": 24
     },
     {
       "name": "label",
-      "type": "string",
-      "required": false,
-      "description": "Accessible image alternative text. Omit for a decorative icon."
+      "type": "string"
     }
-  ],
-  "layout": {
-    "display": "inline-block",
-    "flex": "none",
-    "objectFit": "contain",
-    "verticalAlign": "middle",
-    "width": "size",
-    "height": "size"
-  },
-  "visual": {
-    "default": {
-      "size": "24px"
-    },
-    "dark": {
-      "nonMulticolorFilter": "invert(1)",
-      "multicolorIcon": "cart-fill",
-      "multicolorBackgroundToken": "--cd-color-fixed-white",
-      "multicolorBorderRadius": "3px"
-    }
-  },
-  "accessibility": [
-    "Render label as the image alt text when label is provided.",
-    "Render an empty alt and aria-hidden=true when label is omitted.",
-    "Keep decorative icons out of the accessibility tree.",
-    "Prevent the icon image from being draggable."
-  ],
-  "adaptationRules": [
-    "Implement Icon as a reusable component in the target application's framework.",
-    "Load the existing SVG assets from the client application's asset pipeline or copy the required assets without changing their names.",
-    "Preserve the name-to-file mapping and the special cart-fill multicolor behavior.",
-    "Map label to the target framework's native image accessibility API.",
-    "Do not install Preact, Sass or any other dependency solely for this component."
   ]
 }

@@ -2,52 +2,21 @@
   "schemaVersion": 1,
   "name": "Container",
   "description": "Full-width flex container that lays out content horizontally with wrapping or vertically.",
-  "naming": {
-    "cssClassPrefix": "cd-",
-    "baseClass": "cd-container"
-  },
-  "semantics": {
-    "element": "div",
-    "nativeAttributes": "Forward the target stack's native div attributes and events.",
-    "content": "Render children inside the flex container."
-  },
-  "props": [
-    {
-      "name": "children",
-      "type": "renderable content",
-      "required": false,
-      "description": "Content rendered inside the container."
-    },
-    {
-      "name": "direction",
-      "type": "horizontal | vertical",
-      "default": "horizontal",
-      "description": "Controls the flex direction and wrapping behavior."
-    }
+  "example": "<div class=\"cd-container cd-container--horizontal\">...</div>",
+  "stylePath": "components/container/container.css",
+  "classes": [
+    "cd-container",
+    "cd-container--horizontal",
+    "cd-container--vertical"
   ],
-  "layout": {
-    "display": "flex",
-    "alignItems": "flex-start",
-    "width": "100%",
-    "minWidth": 0,
-    "boxSizing": "border-box",
-    "overflow": "clip",
-    "horizontal": {
-      "flexFlow": "row wrap"
-    },
-    "vertical": {
-      "flexDirection": "column"
+  "variants": {
+    "direction": {
+      "values": [
+        "horizontal",
+        "vertical"
+      ],
+      "classPattern": "cd-container--{value}",
+      "default": "horizontal"
     }
-  },
-  "accessibility": [
-    "Keep the default div semantics unless the target application requires a more specific semantic grouping.",
-    "Preserve the accessible semantics of all child content.",
-    "Forward native attributes and custom classes according to the target framework."
-  ],
-  "adaptationRules": [
-    "Implement Container as a reusable component in the target application's framework.",
-    "Map direction to the target styling system without changing horizontal wrapping or vertical stacking behavior.",
-    "Use the target framework's native children or slot/content convention.",
-    "Do not install Preact, Sass or any other dependency solely for this component."
-  ]
+  }
 }

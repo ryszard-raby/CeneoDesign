@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "mcp": "node --experimental-strip-types mcp/server.ts",
-    "mcp:inspect": "mcp-inspector --config mcp/inspector.json --server ceneo-components",
+    "components:generate": "node --experimental-strip-types mcp/generate-component-manifests.ts && node --experimental-strip-types mcp/compile-component-styles.ts",
+    "mcp:inspector": "mcp-inspector --config mcp/inspector.json --server ceneo-components",
     "mcp:test": "mcp-inspector --cli --config mcp/inspector.json --server ceneo-components --method tools/list",
     "preview": "vite preview"
   },

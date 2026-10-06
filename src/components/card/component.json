@@ -2,64 +2,25 @@
   "schemaVersion": 1,
   "name": "Card",
   "description": "Flexible content surface with white, gray, outlined and bottom-border styles.",
-  "naming": {
-    "cssClassPrefix": "cd-",
-    "baseClass": "cd-card"
-  },
-  "semantics": {
-    "element": "div",
-    "nativeAttributes": "Forward the target stack's native div attributes and events.",
-    "content": "Render children as the card content without imposing heading or landmark semantics."
-  },
-  "props": [
-    {
-      "name": "children",
-      "type": "renderable content",
-      "required": false,
-      "description": "Content rendered inside the card."
-    },
-    {
-      "name": "cardStyle",
-      "type": "white | outlined | border-bottom | gray",
-      "default": "white",
-      "description": "Visual treatment of the card surface."
-    }
+  "example": "<div class=\"cd-card cd-card--white\">...</div>",
+  "stylePath": "components/card/card.css",
+  "classes": [
+    "cd-card",
+    "cd-card--white",
+    "cd-card--outlined",
+    "cd-card--border-bottom",
+    "cd-card--gray"
   ],
-  "layout": {
-    "display": "flex",
-    "direction": "column",
-    "alignment": "stretch",
-    "width": "100%",
-    "minWidth": 0,
-    "boxSizing": "border-box",
-    "paddingBlockToken": "--cd-spacing-card-padding-block",
-    "paddingInlineToken": "--cd-spacing-card-padding-inline",
-    "borderRadiusToken": "--cd-spacing-card-radius"
-  },
-  "visual": {
-    "white": {
-      "backgroundToken": "--cd-background-backgorund"
-    },
-    "gray": {
-      "backgroundToken": "--cd-background-background-2"
-    },
-    "outlined": {
-      "border": "1px solid var(--cd-border-border-2)"
-    },
-    "border-bottom": {
-      "borderBottom": "1px solid var(--cd-border-border-2)",
-      "borderRadius": 0
+  "variants": {
+    "cardStyle": {
+      "values": [
+        "white",
+        "outlined",
+        "border-bottom",
+        "gray"
+      ],
+      "classPattern": "cd-card--{value}",
+      "default": "white"
     }
-  },
-  "accessibility": [
-    "Keep the default div semantics unless the target application has a specific semantic container requirement.",
-    "Preserve the accessible semantics of headings, links and controls supplied as children.",
-    "Forward native attributes and custom classes according to the target framework."
-  ],
-  "adaptationRules": [
-    "Implement Card as a reusable component in the target application's framework.",
-    "Map cardStyle to the target styling system without changing the four visual variants.",
-    "Use the target framework's native children or slot/content convention.",
-    "Do not install Preact, Sass or any other dependency solely for this component."
-  ]
+  }
 }

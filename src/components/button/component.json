@@ -2,125 +2,43 @@
   "schemaVersion": 1,
   "name": "Button",
   "description": "Action control with seven visual variants, two sizes and optional leading or trailing icons.",
-  "naming": {
-    "cssClassPrefix": "cd-",
-    "baseClass": "cd-button"
-  },
-  "semantics": {
-    "element": "button",
-    "defaultType": "button",
-    "nativeAttributes": "Forward the target stack's native button attributes and events.",
-    "iconsAria": "Treat decorative leading and trailing icons as hidden from assistive technology."
-  },
-  "props": [
-    {
-      "name": "content",
-      "type": "renderable content",
-      "required": false,
-      "default": "Button",
-      "description": "Visible button label or custom content."
-    },
-    {
-      "name": "variant",
-      "type": "primary | accent | outline | selected | dashed | blank | gray",
+  "example": "<button type=\"button\" class=\"cd-button cd-button--primary cd-button--default\"><span class=\"cd-button__label\">Button</span></button>",
+  "stylePath": "components/button/button.css",
+  "classes": [
+    "cd-button",
+    "cd-button__icon",
+    "cd-button__label",
+    "cd-button--primary",
+    "cd-button--accent",
+    "cd-button--outline",
+    "cd-button--selected",
+    "cd-button--dashed",
+    "cd-button--blank",
+    "cd-button--gray",
+    "cd-button--default",
+    "cd-button--small"
+  ],
+  "variants": {
+    "variant": {
+      "values": [
+        "primary",
+        "accent",
+        "outline",
+        "selected",
+        "dashed",
+        "blank",
+        "gray"
+      ],
+      "classPattern": "cd-button--{value}",
       "default": "primary"
     },
-    {
-      "name": "size",
-      "type": "default | small",
+    "size": {
+      "values": [
+        "default",
+        "small"
+      ],
+      "classPattern": "cd-button--{value}",
       "default": "default"
-    },
-    {
-      "name": "iconStart",
-      "type": "renderable content",
-      "required": false,
-      "description": "Decorative icon displayed before the label."
-    },
-    {
-      "name": "iconEnd",
-      "type": "renderable content",
-      "required": false,
-      "description": "Decorative icon displayed after the label."
     }
-  ],
-  "layout": {
-    "display": "inline-flex",
-    "alignment": "center",
-    "whiteSpace": "nowrap",
-    "gapToken": "--cd-spacing-component-gap-horizontal",
-    "default": {
-      "heightToken": "--cd-spacing-button-height",
-      "paddingInlineToken": "--cd-spacing-button-padding-inline",
-      "fontSizeToken": "--cd-text-base"
-    },
-    "small": {
-      "heightToken": "--cd-spacing-button-small-height",
-      "paddingInlineToken": "--cd-spacing-button-padding-inline",
-      "fontSizeToken": "--cd-text-sm"
-    },
-    "icon": {
-      "width": "24px",
-      "height": "24px",
-      "fitSvgAndImage": true
-    }
-  },
-  "visual": {
-    "borderRadiusToken": "--cd-spacing-button-radius",
-    "fontFamily": "Inter, Arial, sans-serif",
-    "fontWeightToken": "--cd-font-weight-bold",
-    "primary": {
-      "backgroundToken": "--cd-color-fixed-primary",
-      "foregroundToken": "--cd-color-fixed-white"
-    },
-    "accent": {
-      "backgroundToken": "--cd-color-fixed-accent",
-      "foregroundToken": "--cd-color-fixed-white"
-    },
-    "gray": {
-      "backgroundToken": "--cd-background-background-2",
-      "foregroundToken": "--cd-text-text"
-    },
-    "outline": {
-      "backgroundToken": "--cd-background-backgorund",
-      "foregroundToken": "--cd-text-text",
-      "border": "1px solid var(--cd-border-border-2)"
-    },
-    "selected": {
-      "backgroundToken": "--cd-background-backgorund",
-      "foregroundToken": "--cd-text-text",
-      "border": "2px solid var(--cd-border-border)"
-    },
-    "dashed": {
-      "backgroundToken": "--cd-background-backgorund",
-      "foregroundToken": "--cd-text-text",
-      "border": "1px dashed var(--cd-border-border)"
-    },
-    "blank": {
-      "backgroundToken": "--cd-background-backgorund",
-      "foregroundToken": "--cd-text-text",
-      "border": "none"
-    },
-    "focusVisible": {
-      "outline": "2px solid var(--cd-color-fixed-accent)",
-      "outlineOffset": "2px"
-    },
-    "disabled": {
-      "opacity": 0.5,
-      "cursor": "not-allowed"
-    }
-  },
-  "accessibility": [
-    "Use the target stack's native button element or button primitive.",
-    "Preserve keyboard activation and focus-visible indication.",
-    "Forward disabled and other native button semantics.",
-    "Hide decorative start and end icons from assistive technology.",
-    "Keep a visible label unless the target application supplies an accessible name for an icon-only use."
-  ],
-  "adaptationRules": [
-    "Use the target application's existing framework and component conventions.",
-    "Use its existing styling system and design tokens where equivalents exist.",
-    "Do not install Preact, Sass or any other dependency solely for this component.",
-    "Prefer an existing button primitive in the target application and map this contract onto it.",
-    "Treat dimensions and colors as reference values when the target design system has no equivalent."
-  ]
+  }
 }

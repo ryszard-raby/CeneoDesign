@@ -1,0 +1,14 @@
+.cd-container {
+  display: flex;
+  align-items: flex-start;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  overflow: clip;
+}
+.cd-container--horizontal {
+  flex-flow: row wrap;
+}
+.cd-container--vertical {
+  flex-direction: column;
+}

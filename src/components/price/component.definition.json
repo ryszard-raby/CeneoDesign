@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "name": "Price",
+  "description": "Product price composed of an optional prefix, emphasized amount, decimal part and currency.",
+  "naming": {
+    "cssClassPrefix": "cd-",
+    "baseClass": "cd-price"
+  },
+  "figma": {
+    "fileKey": "iCotPXnNLa5DV1OsJEgsio",
+    "nodeId": "81:2",
+    "pageId": "75:771"
+  },
+  "semantics": {
+    "element": "span",
+    "accessibleName": "Expose the complete price as one accessible label."
+  },
+  "props": [
+    { "name": "amount", "type": "number | string", "required": false, "default": 2400 },
+    { "name": "decimal", "type": "string", "required": false, "default": "00" },
+    { "name": "currency", "type": "string", "required": false, "default": "zł" },
+    { "name": "prefix", "type": "string", "required": false, "default": "od" },
+    { "name": "showPrefix", "type": "boolean", "required": false, "default": true }
+  ],
+  "layout": {
+    "display": "inline-flex",
+    "alignment": "baseline",
+    "whiteSpace": "nowrap",
+    "prefixPaddingRightToken": "--cd-spacing-component-gap-sm"
+  },
+  "visual": {
+    "foregroundToken": "--cd-text-text",
+    "prefixAndSuffix": {
+      "fontSizeToken": "--cd-text-sm",
+      "fontWeightToken": "--cd-font-weight-normal",
+      "lineHeightToken": "--cd-line-height-sm"
+    },
+    "amount": {
+      "fontSizeToken": "--cd-text-2xl",
+      "fontWeightToken": "--cd-font-weight-bold",
+      "lineHeightToken": "--cd-line-height-2xl"
+    }
+  },
+  "accessibility": [
+    "Expose the full price as one accessible name.",
+    "Hide the visually separated price fragments from assistive technology.",
+    "Allow consumers to override the accessible label."
+  ],
+  "adaptationRules": [
+    "Implement Price as a reusable component in the target application's framework.",
+    "Preserve the baseline alignment and typography hierarchy from Figma.",
+    "Use the supplied design tokens for all tokenized values.",
+    "Do not install dependencies solely for this component."
+  ]
+}

@@ -1,0 +1,42 @@
+.cd-text {
+  width: 100%;
+  margin: 0;
+  color: var(--cd-text-text);
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  overflow-wrap: anywhere;
+}
+.cd-text--xs {
+  font-size: calc(var(--cd-text-xs) * 1px);
+  line-height: calc(var(--cd-line-height-xs) * 1px);
+}
+.cd-text--sm {
+  font-size: calc(var(--cd-text-sm) * 1px);
+  line-height: calc(var(--cd-line-height-sm) * 1px);
+}
+.cd-text--base {
+  font-size: calc(var(--cd-text-base) * 1px);
+  line-height: calc(var(--cd-line-height-base) * 1px);
+}
+.cd-text--lg {
+  font-size: calc(var(--cd-text-lg) * 1px);
+  line-height: calc(var(--cd-line-height-lg) * 1px);
+}
+.cd-text--xl {
+  font-size: calc(var(--cd-text-xl) * 1px);
+  line-height: calc(var(--cd-line-height-xl) * 1px);
+}
+.cd-text--2xl {
+  font-size: calc(var(--cd-text-2xl) * 1px);
+  line-height: calc(var(--cd-line-height-2xl) * 1px);
+}
+.cd-text--3xl {
+  font-size: calc(var(--cd-text-3xl) * 1px);
+  line-height: calc(var(--cd-line-height-3xl) * 1px);
+}
+.cd-text--normal {
+  font-weight: var(--cd-font-weight-normal);
+}
+.cd-text--bold {
+  font-weight: var(--cd-font-weight-bold);
+}

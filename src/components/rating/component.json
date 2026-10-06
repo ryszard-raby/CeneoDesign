@@ -2,58 +2,39 @@
   "schemaVersion": 1,
   "name": "Rating",
   "description": "Product rating with stars, numeric score and review count in default, small and compact variants.",
-  "naming": {
-    "cssClassPrefix": "cd-",
-    "baseClass": "cd-rating"
-  },
-  "figma": {
-    "fileKey": "iCotPXnNLa5DV1OsJEgsio",
-    "nodeId": "79:1006",
-    "pageId": "79:1003"
-  },
-  "semantics": {
-    "element": "span",
-    "accessibleName": "Expose the score, maximum and review count as one accessible label."
-  },
-  "props": [
-    { "name": "value", "type": "number", "required": false, "default": 4.5, "description": "Rating clamped to the 0–5 range and visually rounded to half-star steps." },
-    { "name": "count", "type": "number", "required": false, "default": 999 },
-    { "name": "size", "type": "default | small | compact", "required": false, "default": "default" }
+  "example": "<span class=\"cd-rating cd-rating--default\">...</span>",
+  "stylePath": "components/rating/rating.css",
+  "classes": [
+    "cd-rating",
+    "cd-rating__stars",
+    "cd-rating__star",
+    "cd-rating__value",
+    "cd-rating__count",
+    "cd-rating--default",
+    "cd-rating--small",
+    "cd-rating--compact"
   ],
-  "layout": {
-    "display": "inline-flex",
-    "alignment": "center",
-    "gapToken": "--cd-spacing-component-gap-horizontal",
-    "starGap": "2px",
-    "defaultStarSize": "20px",
-    "smallStarSize": "16px",
-    "compactStarCount": 1
+  "variants": {
+    "size": {
+      "values": [
+        "default",
+        "small",
+        "compact"
+      ],
+      "classPattern": "cd-rating--{value}",
+      "default": "default"
+    }
   },
-  "visual": {
-    "foregroundToken": "--cd-text-text",
-    "secondaryForegroundToken": "--cd-text-text-2",
-    "activeStarToken": "--cd-color-fixed-yellow",
-    "inactiveStarToken": "--cd-background-background-3",
-    "default": {
-      "fontSizeToken": "--cd-text-sm",
-      "lineHeightToken": "--cd-line-height-sm"
+  "attributes": [
+    {
+      "name": "value",
+      "type": "number",
+      "default": 4.5
     },
-    "smallAndCompact": {
-      "fontSizeToken": "--cd-text-xs",
-      "lineHeightToken": "--cd-line-height-xs"
-    },
-    "valueWeightToken": "--cd-font-weight-bold",
-    "countWeightToken": "--cd-font-weight-normal"
-  },
-  "accessibility": [
-    "Expose the complete rating as one accessible name.",
-    "Hide visual star and text fragments from assistive technology.",
-    "Allow consumers to override the accessible label."
-  ],
-  "adaptationRules": [
-    "Implement Rating as a reusable component in the target application's framework.",
-    "Reuse the supplied Star.svg asset without changing its geometry.",
-    "Preserve all three Figma variants and their exact star sizes.",
-    "Use the supplied design tokens for all tokenized values."
+    {
+      "name": "count",
+      "type": "number",
+      "default": 999
+    }
   ]
 }

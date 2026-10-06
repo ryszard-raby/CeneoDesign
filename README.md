@@ -2,25 +2,24 @@
 
 Biblioteka komponentów Preact oparta na projekcie CeneoDesign w Figmie.
 
-## Praca przez MCP
+## Użycie przez MCP
 
-Agent powinien rozpocząć każdą sesję od wywołania narzędzia `get_started`.
-Zwraca ono ten dokument oraz pełną zawartość `src/theme/figma-variables.css`.
+1. Wywołaj `get_started` i skopiuj kompletny plik zmiennych CSS do projektu.
+2. Wywołaj `component_styles` bez argumentów, aby pobrać arkusze CSS wszystkich komponentów, albo podaj nazwę komponentu, aby pobrać jeden arkusz.
+3. Wywołaj `components_list`, aby znaleźć potrzebny element.
+4. Wywołaj `component_spec` z nazwą, np. `Button`. Otrzymasz przykład HTML, klasy i dostępne warianty.
 
-Wymagana kolejność pracy:
+MCP służy do sprawdzania użycia istniejących styli. Nie generuje nowej implementacji komponentu. `component_styles` zwraca gotowe arkusze CSS komponentów.
 
-1. Wywołaj `get_started` i zastosuj otrzymany kompletny plik zmiennych CSS.
-2. Wywołaj `list_components`, aby znaleźć dostępny komponent.
-3. Wywołaj `get_component_spec` z nazwą komponentu i stosem aplikacji docelowej.
-4. Używaj `read_component` lub `read_styles` tylko wtedy, gdy potrzebujesz szczegółów implementacji referencyjnej. `read_styles` nie zwraca ponownie zmiennych motywu.
+## Manifesty komponentów
 
-## Zasady implementacji
+Każdy `src/components/*/component.json` jest krótkim manifestem użycia generowanym z `component.definition.json` oraz deklaracji typów i klas w komponencie. Skrypt kompiluje też źródłowe `*.scss` do osobnych plików `*.css` obok komponentów i do wspólnego `src/theme/components.css`.
 
-- Komponenty muszą korzystać ze zmiennych `--cd-*` z pliku motywu.
-- Należy skopiować cały plik zmiennych, aby zachować tryby light, dark i mobile.
-- Komponent należy zaimplementować natywnie w stosie aplikacji docelowej.
-- Klasy należące do biblioteki używają prefiksu `cd-`.
-- Nie należy instalować dodatkowego frameworka tylko po to, aby przenieść komponent.
+Po zmianie komponentu lub jego wariantów wygeneruj manifesty ponownie:
+
+```shell
+npm run components:generate
+```
 
 ## Lokalne polecenia
 
@@ -28,13 +27,10 @@ Wymagana kolejność pracy:
 npm run dev
 npm run build
 npm run mcp
-npm run mcp:inspect
+npm run mcp:inspector
 npm run mcp:test
 ```
 
 ## Codex
 
-Konfiguracja `.codex/config.toml` rejestruje lokalny serwer MCP pod nazwą
-`ceneo-components`. Codex wczytuje konfigurację przy otwarciu nowej sesji.
-Agent powinien rozpocząć pracę od `ceneo-components.get_started`.
-
+Konfiguracja `.codex/config.toml` rejestruje lokalny serwer MCP pod nazwą `ceneo-components`. Codex wczytuje ją przy otwarciu nowej sesji. Pracę z MCP rozpocznij od `ceneo-components.get_started`.

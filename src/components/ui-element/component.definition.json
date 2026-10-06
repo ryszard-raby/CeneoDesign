@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "name": "UiElement",
+  "description": "Renderer for branded UI assets, currently including the Ceneo logo.",
+  "naming": {
+    "cssClassPrefix": "cd-",
+    "baseClass": "cd-ui-element"
+  },
+  "semantics": {
+    "element": "img",
+    "assetSource": "src/ui elements/*.svg",
+    "decorativeBehavior": "Elements without a label are decorative; labeled elements expose their accessible name."
+  },
+  "props": [
+    {
+      "name": "name",
+      "type": "logo",
+      "required": true,
+      "description": "Name of an asset from the UI element catalog."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "Accessible image alternative text. Omit when surrounding content names the brand."
+    }
+  ],
+  "layout": {
+    "display": "block",
+    "flex": "none",
+    "maxWidth": "100%",
+    "height": "auto",
+    "objectFit": "contain"
+  },
+  "visual": {
+    "logo": {
+      "width": "102px",
+      "aspectRatio": "102 / 28"
+    }
+  },
+  "accessibility": [
+    "Use label as the image alternative text when the image conveys information.",
+    "Render an empty alt and aria-hidden=true when the image is decorative.",
+    "Prevent the image from being dragged."
+  ],
+  "adaptationRules": [
+    "Implement UiElement as a reusable component in the target application's framework.",
+    "Load the existing SVG assets from the client application's asset pipeline.",
+    "Preserve the original logo proportions and colors.",
+    "Do not install dependencies solely for this component."
+  ]
+}

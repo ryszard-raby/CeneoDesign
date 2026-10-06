@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "name": "Text",
+  "description": "Responsive text primitive with seven token-based sizes, two weights and configurable semantic markup.",
+  "naming": {
+    "cssClassPrefix": "cd-",
+    "baseClass": "cd-text"
+  },
+  "semantics": {
+    "defaultElement": "span",
+    "nativeAttributes": "Forward native attributes for the selected text element.",
+    "guidance": "Use sm normal for body copy and lg bold for headings. Select semantic markup independently from visual size."
+  },
+  "props": [
+    { "name": "children", "type": "renderable content", "required": false, "default": "Text" },
+    { "name": "content", "type": "string", "required": false, "description": "Fallback string content when children are not supplied." },
+    { "name": "as", "type": "span | p | div | label | strong | h1 | h2 | h3 | h4 | h5 | h6", "default": "span" },
+    { "name": "size", "type": "xs | sm | base | lg | xl | 2xl | 3xl", "default": "xs" },
+    { "name": "weight", "type": "normal | bold", "default": "normal" }
+  ],
+  "layout": {
+    "width": "100%",
+    "height": "content",
+    "overflowWrap": "anywhere"
+  },
+  "visual": {
+    "foregroundToken": "--cd-text-text",
+    "fontFamily": "Inter, Arial, sans-serif",
+    "normalWeightToken": "--cd-font-weight-normal",
+    "boldWeightToken": "--cd-font-weight-bold",
+    "sizes": {
+      "xs": { "fontSizeToken": "--cd-text-xs", "lineHeightToken": "--cd-line-height-xs" },
+      "sm": { "fontSizeToken": "--cd-text-sm", "lineHeightToken": "--cd-line-height-sm" },
+      "base": { "fontSizeToken": "--cd-text-base", "lineHeightToken": "--cd-line-height-base" },
+      "lg": { "fontSizeToken": "--cd-text-lg", "lineHeightToken": "--cd-line-height-lg" },
+      "xl": { "fontSizeToken": "--cd-text-xl", "lineHeightToken": "--cd-line-height-xl" },
+      "2xl": { "fontSizeToken": "--cd-text-2xl", "lineHeightToken": "--cd-line-height-2xl" },
+      "3xl": { "fontSizeToken": "--cd-text-3xl", "lineHeightToken": "--cd-line-height-3xl" }
+    }
+  },
+  "accessibility": [
+    "Choose the element from document structure and meaning, not visual size.",
+    "Do not use a larger visual size as a substitute for heading semantics.",
+    "Preserve the semantic color token in light and dark themes."
+  ],
+  "adaptationRules": [
+    "Implement Text as a reusable component in the target application's framework.",
+    "Map all sizes and weights to existing design tokens.",
+    "Keep semantic element selection independent from visual styling.",
+    "Do not install Preact, Sass or any dependency solely for this component."
+  ]
+}

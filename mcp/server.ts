@@ -9,23 +9,27 @@ const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const sourceRoot = resolve(projectRoot, 'src')
 const componentRoot = resolve(sourceRoot, 'components')
 const readmeFile = resolve(projectRoot, 'README.md')
+const allComponentStylesFile = resolve(sourceRoot, 'theme', 'components.css')
 const tokenFiles = [
   resolve(sourceRoot, 'theme', 'figma-variables.css'),
 ]
-const sourceExtensions = new Set(['.css', '.js', '.jsx', '.scss', '.ts', '.tsx'])
 const styleExtensions = new Set(['.css', '.scss'])
 const manifestExtensions = new Set(['.json'])
-const componentSpecSchema = z
-  .object({
-    schemaVersion: z.number(),
-    name: z.string(),
-    description: z.string(),
-    naming: z.object({
-      cssClassPrefix: z.literal('cd-'),
-      baseClass: z.string().regex(/^cd-[a-z0-9]+(?:-[a-z0-9]+)*$/),
-    }),
-  })
-  .passthrough()
+const componentSpecSchema = z.object({
+  schemaVersion: z.number(),
+  name: z.string(),
+  description: z.string(),
+  example: z.string(),
+  stylePath: z.string(),
+  classes: z.array(z.string()),
+  variants: z.record(z.string(), z.object({
+    values: z.array(z.string()),
+    classPattern: z.string(),
+    default: z.unknown().optional(),
+  })),
+  requiredAttributes: z.array(z.string()).optional(),
+  attributes: z.array(z.record(z.string(), z.unknown())).optional(),
+})
 
 async function findFiles(directory: string, extensions: Set<string>): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true })
@@ -154,58 +158,6 @@ function tokenResponse(document: DesignTokenDocument) {
   }
 }
 
-function resolveTokenValue(value: unknown, tokens: TokenValues): unknown {
-  if (typeof value !== 'string') {
-    return value
-  }
-
-  if (tokens[value]) {
-    return tokens[value]
-  }
-
-  return value.replace(/var\((--cd-[\w-]+)\)/g, (reference, tokenName: string) => {
-    return tokens[tokenName] ?? reference
-  })
-}
-
-function resolveVisualStyles(visual: unknown, tokens: TokenValues): unknown {
-  if (Array.isArray(visual)) {
-    return visual.map((value) => resolveVisualStyles(value, tokens))
-  }
-
-  if (visual && typeof visual === 'object') {
-    return Object.fromEntries(
-      Object.entries(visual).map(([key, value]) => {
-        const resolvedKey = key.endsWith('Token') ? key.slice(0, -5) : key
-        return [resolvedKey, resolveVisualStyles(value, tokens)]
-      }),
-    )
-  }
-
-  return resolveTokenValue(visual, tokens)
-}
-
-function resolvedStyles(spec: Record<string, unknown>, tokens: DesignTokens) {
-  const themes = {
-    default: tokens.default,
-    mobile: tokens.mobile,
-    dark: tokens.dark,
-    mobileDark: tokens.mobileDark,
-  }
-
-  return {
-    instruction:
-      'Use these resolved values directly. Do not ask the user to provide colors or infer them from token names.',
-    source: 'src/theme/figma-variables.css',
-    themes: Object.fromEntries(
-      Object.entries(themes).map(([theme, values]) => [
-        theme,
-        resolveVisualStyles(spec.visual, values),
-      ]),
-    ),
-  }
-}
-
 const server = new McpServer({
   name: 'ceneo-design-components',
   version: '1.7.0',
@@ -215,7 +167,7 @@ server.registerTool(
   'get_started',
   {
     description:
-      'REQUIRED FIRST STEP. Read the Ceneo Design usage guide and download the complete CSS variables file before listing or implementing components.',
+      'REQUIRED FIRST STEP. Read the Ceneo Design usage guide and download the complete CSS variables file before looking up component usage.',
     inputSchema: {},
   },
   async () => {
@@ -225,7 +177,7 @@ server.registerTool(
     ])
 
     const response = {
-      instruction: 'Read the guide and copy the complete CSS file before requesting a component specification.',
+      instruction: 'Read the guide and copy the complete CSS file before requesting component usage.',
       guide: {
         path: 'README.md',
         content: readme,
@@ -233,8 +185,8 @@ server.registerTool(
       designTokens: tokenResponse(tokenDocument),
       nextSteps: [
         'Apply the complete cssFile.content in the target application.',
-        'Call list_components.',
-        'Call get_component_spec with the selected component name and target stack.',
+        'Call components_list.',
+        'Call component_spec with the selected component name to get its example, classes and variants.',
       ],
     }
 
@@ -245,20 +197,18 @@ server.registerTool(
 )
 
 server.registerTool(
-  'list_components',
+  'components_list',
   {
     description:
-      'After get_started has been called, list reusable components that have technology-neutral implementation specifications.',
+      'After get_started, list the available components and their default usage examples.',
     inputSchema: {},
   },
   async () => {
     const specs = await findComponentSpecs()
-    const components = specs.map(({ path, spec }) => ({
+    const components = specs.map(({ spec }) => ({
       name: spec.name,
       description: spec.description,
-      specPath: path,
-      cssClassPrefix: spec.naming.cssClassPrefix,
-      baseClass: spec.naming.baseClass,
+      example: spec.example,
     }))
 
     return {
@@ -268,121 +218,61 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_component_spec',
+  'component_spec',
   {
     description:
-      'Call get_started first. Then get a component contract that MUST be implemented as a reusable native component of the required client framework or application stack, using the required cd- CSS class prefix and exact resolved component styles. The client stack is required. Do not return a plain HTML snippet, standalone script, or source from another framework.',
+      'Call get_started first. Component names are matched without case sensitivity. Return the component usage example, available CSS classes, and class-backed variants. The component styles should already be present in the client project; use this as a usage reference, not an implementation contract.',
     inputSchema: {
-      name: z.string().regex(/^[A-Z][A-Za-z0-9_]*$/).describe('Component name'),
-      targetStack: z
-        .string()
-        .min(1)
-        .describe('Required client framework and styling stack, for example React with CSS Modules or ASP.NET Core Razor with scoped CSS'),
+      name: z.string().trim().min(1).describe('Component name; matching ignores letter case.'),
     },
   },
-  async ({ name, targetStack }) => {
+  async ({ name }) => {
     const specs = await findComponentSpecs()
-    const match = specs.find(({ spec }) => spec.name === name)
+    const normalizedName = name.trim().toLowerCase()
+    const match = specs.find(({ spec }) => spec.name.toLowerCase() === normalizedName)
 
     if (!match) {
       throw new Error(`Component not found: ${name}.`)
     }
 
-    const tokenDocument = await readDesignTokenDocument()
-    const response = {
-      component: match.spec,
-      resolvedStyles: resolvedStyles(match.spec, tokenDocument),
-      tokenDependency: {
-        source: tokenDocument.filePath,
-        instruction: 'The complete token CSS was returned by get_started. Reuse that file; do not request or duplicate it here.',
-      },
-      implementationInstructions: {
-        targetStack,
-        frameworkComponent: {
-          required: true,
-          deliverable: `Create a reusable component implemented natively in ${targetStack}.`,
-          preserve: [
-            'Use the client framework component model, lifecycle and prop/input conventions.',
-            'Use the client framework rendering and event-binding APIs.',
-            'Integrate with the client application styling system.',
-            'Export or register the component according to the client application conventions.',
-          ],
-          forbidden: [
-            'Do not return a plain HTML snippet as the component implementation.',
-            'Do not create a standalone JavaScript widget outside the client framework.',
-            'Do not copy the Preact implementation when the client uses another framework.',
-            'Do not install another framework or dependencies solely to host this component.',
-          ],
-        },
-        naming: {
-          required: true,
-          cssClassPrefix: match.spec.naming.cssClassPrefix,
-          baseClass: match.spec.naming.baseClass,
-          rules: [
-            'Use the baseClass on the component root element or host element.',
-            'Prefix every component-owned CSS class and selector with cssClassPrefix.',
-            'Keep modifier and state classes prefixed, for example cd-button--small or cd-button:focus-visible.',
-            'Do not use an unprefixed component class such as button, card, container, icon or layout.',
-          ],
-        },
-        dependencyPolicy: 'Do not add dependencies for this component.',
-        approach: [
-          'Inspect the target application conventions before writing code.',
-          'Implement and expose the component using the required client framework, language and styling system.',
-          'Reuse existing primitives and tokens where possible.',
-          'Use resolvedStyles from this response directly; do not ask the user for colors or guess them from token names.',
-          'Adapt prop names to local conventions while preserving behavior and accessibility.',
-          'Validate with the target application build and relevant tests.',
-        ],
-      },
-    }
-
     return {
-      content: [{ type: 'text', text: JSON.stringify(response, null, 2) }],
+      content: [{ type: 'text', text: JSON.stringify(match.spec, null, 2) }],
     }
   },
 )
 
 server.registerTool(
-  'read_component',
+  'component_styles',
   {
     description:
-      'Call get_started first. Read framework-specific reference source only when implementation detail is needed. Prefer get_component_spec for use in another app.',
+      'Call get_started first. With no arguments, return the single bundled CSS file for every component. Pass a component name to return only its compiled CSS. Theme variables are provided only by get_started.',
     inputSchema: {
-      path: z.string().describe('Source-relative path, for example components/Button/button.tsx'),
+      component: z.string().trim().min(1).optional().describe('Optional component name; matching ignores letter case. Omit to return styles for all components.'),
     },
   },
-  async ({ path }) => {
-    const filePath = resolveSourceFile(path, sourceExtensions)
-    const source = await readFile(filePath, 'utf8')
-
-    return {
-      content: [{ type: 'text', text: `// src/${fromSourceRoot(filePath)}\n${source}` }],
-    }
-  },
-)
-
-server.registerTool(
-  'read_styles',
-  {
-    description:
-      'Call get_started first. Read component or preview CSS/SCSS implementation details. Theme variables are provided only by get_started.',
-    inputSchema: {
-      path: z.string().default('styles.scss').describe('Style path relative to src'),
-    },
-  },
-  async ({ path }) => {
-    const filePath = resolveSourceFile(path, styleExtensions)
-
-    if (filePath === tokenFiles[0]) {
-      throw new Error('Theme variables are returned by get_started and cannot be duplicated through read_styles.')
+  async ({ component }) => {
+    if (!component) {
+      const source = await readFile(allComponentStylesFile, 'utf8')
+      return {
+        content: [{ type: 'text', text: `/* src/${fromSourceRoot(allComponentStylesFile)} */\n${source}` }],
+      }
     }
 
-    const source = await readFile(filePath, 'utf8')
+    const specs = await findComponentSpecs()
+    const normalizedName = component.trim().toLowerCase()
+    const selected = specs.filter(({ spec }) => spec.name.toLowerCase() === normalizedName)
 
-    return {
-      content: [{ type: 'text', text: `/* src/${fromSourceRoot(filePath)} */\n${source}` }],
+    if (selected.length === 0) {
+      throw new Error(`Component not found: ${component}. Available components: ${specs.map(({ spec }) => spec.name).join(', ')}.`)
     }
+
+    const styles = await Promise.all(selected.map(async ({ spec }) => {
+      const filePath = resolveSourceFile(spec.stylePath, styleExtensions)
+      const source = await readFile(filePath, 'utf8')
+      return { type: 'text' as const, text: `/* src/${fromSourceRoot(filePath)} */\n${source}` }
+    }))
+
+    return { content: styles }
   },
 )
 

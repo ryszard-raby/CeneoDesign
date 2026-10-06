@@ -1,0 +1,21 @@
+.cd-price {
+  display: inline-flex;
+  align-items: baseline;
+  color: var(--cd-text-text);
+  font-family: Inter, Arial, sans-serif;
+  font-style: normal;
+  white-space: nowrap;
+}
+.cd-price__prefix, .cd-price__suffix {
+  font-size: calc(var(--cd-text-sm) * 1px);
+  font-weight: var(--cd-font-weight-normal);
+  line-height: calc(var(--cd-line-height-sm) * 1px);
+}
+.cd-price__prefix {
+  padding-right: calc(var(--cd-spacing-component-gap-sm) * 1px);
+}
+.cd-price__amount {
+  font-size: calc(var(--cd-text-2xl) * 1px);
+  font-weight: var(--cd-font-weight-bold);
+  line-height: calc(var(--cd-line-height-2xl) * 1px);
+}
